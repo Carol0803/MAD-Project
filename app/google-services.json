@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "948888911022",
+    "project_id": "odds-38a12",
+    "storage_bucket": "odds-38a12.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:948888911022:android:44ebb18ba912369349c13f",
+        "android_client_info": {
+          "package_name": "w2.g16.odds"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "948888911022-ufereon842r90hiul5gahjdbclgpra6d.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCqamWnFms_Jo231A8d9BJbpOlg13gqbj8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "948888911022-ufereon842r90hiul5gahjdbclgpra6d.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

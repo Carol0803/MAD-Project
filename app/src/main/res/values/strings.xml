@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">ODDS</string>
+    <string-array name="variation">
+        <item>variation1</item>
+        <item>variation2</item>
+        <item>variation3</item>
+    </string-array>
 </resources>
