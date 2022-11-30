@@ -1,7 +1,5 @@
 package w2.g16.odds.ordering;
 
-import static android.content.ContentValues.TAG;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -14,8 +12,6 @@ import android.view.View;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -85,4 +81,7 @@ public class CartActivity extends AppCompatActivity {
         binding.recCart.setLayoutManager(new LinearLayoutManager(this));
     }
 
+    public void fnCheckout(View view) {
+        startActivity(new Intent(this, CheckoutActivity.class));
+    }
 }
