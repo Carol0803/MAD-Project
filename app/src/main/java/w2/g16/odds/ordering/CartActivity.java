@@ -19,7 +19,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.Vector;
 
 import w2.g16.odds.MainActivity;
-import w2.g16.odds.Product;
+import w2.g16.odds.model.Product;
 import w2.g16.odds.R;
 import w2.g16.odds.databinding.ActivityCartBinding;
 
@@ -64,8 +64,9 @@ public class CartActivity extends AppCompatActivity {
                                 String price = document.get("product_price").toString();
                                 String variation = document.get("product_variation").toString();
                                 String quantity = document.get("quantity").toString();
+                                String img = "https://firebasestorage.googleapis.com/v0/b/odds-38a12.appspot.com/o/product%2FFOE%2FFOE-0001.jpeg?alt=media&token=19785812-88ae-4ab9-aad3-7d1542f12e3a";
 
-                                products.add(new Product(name, price, variation, quantity));
+                                products.add(new Product(name, price, variation, quantity, img, null));
                                 adapter.notifyItemInserted(products.size());
                             }
                         } else {

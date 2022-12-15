@@ -4,8 +4,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.RadioButton;
 
 import w2.g16.odds.MainActivity;
 import w2.g16.odds.R;
@@ -31,6 +33,9 @@ public class CheckoutActivity extends AppCompatActivity {
                 startActivity(new Intent(getApplicationContext(), CartActivity.class));
             }
         });
+
+
+
     }
 
     public void fnChangeAddress(View view) {
@@ -39,5 +44,22 @@ public class CheckoutActivity extends AppCompatActivity {
 
     public void fnNext(View view) {
         startActivity(new Intent(this, CheckoutActivity2.class));
+    }
+
+    public void onRadioButtonClicked(View view) {
+        boolean checked = ((RadioButton) view).isChecked();
+
+        switch(view.getId()) {
+            case R.id.rbDelivery:
+                if (checked)
+                    binding.rbDelivery.setBackgroundResource(R.drawable.ic_delivery_checked);
+                    binding.rbSelfCollection.setBackgroundResource(R.drawable.ic_self_collection);
+                    break;
+            case R.id.rbSelfCollection:
+                if (checked)
+                    binding.rbSelfCollection.setBackgroundResource(R.drawable.ic_self_collection_checked);
+                    binding.rbDelivery.setBackgroundResource(R.drawable.ic_delivery);
+                    break;
+        }
     }
 }

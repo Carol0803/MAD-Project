@@ -106,15 +106,6 @@
             android:layout_height="1dp"
             android:background="#BFC5CC" />
 
-        <RadioButton
-            android:id="@+id/rbWallet"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/belleza"
-            android:paddingHorizontal="15dp"
-            android:text="ODDS Wallet"
-            android:textColor="@color/black"
-            android:textSize="18sp" />
     </RadioGroup>
 
     <Button
@@ -122,12 +113,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/radioGroup"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
+        android:layout_alignParentStart="false"
+        android:layout_alignParentEnd="false"
         android:layout_alignParentBottom="false"
         android:layout_marginVertical="10dp"
-        android:layout_marginHorizontal="155dp"
         android:fontFamily="@font/league_gothic"
+        android:layout_centerHorizontal="true"
         android:onClick="fnNext"
         android:text="Next"
         android:textColor="@color/white"

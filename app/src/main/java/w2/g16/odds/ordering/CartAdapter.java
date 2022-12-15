@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.Vector;
 
-import w2.g16.odds.Product;
+import w2.g16.odds.model.Product;
 import w2.g16.odds.R;
 
 public class CartAdapter extends RecyclerView.Adapter<CartViewHolder> {

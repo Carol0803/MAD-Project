@@ -40,14 +40,15 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingHorizontal="20dp"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="10dp"
+        android:paddingBottom="55dp"
         android:layout_below="@id/lytHeader"
         android:background="@drawable/rounded_rectangle_bg2">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical" >
 
             <FrameLayout
@@ -60,7 +61,7 @@
             <LinearLayout
                 android:id="@+id/lytCategories"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginVertical="30dp"
                 android:layout_marginHorizontal="20dp"
                 android:orientation="vertical"
@@ -101,17 +102,20 @@
                 </LinearLayout>
 
                 <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recCategory"
+                    android:scrollbars="horizontal"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:paddingHorizontal="20dp"
-                    android:background="@color/white"/>
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:paddingVertical="10dp"
+                    android:paddingHorizontal="5dp"/>
 
             </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/lytRecommendation"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginHorizontal="20dp"
                 android:orientation="vertical"
                 android:background="@drawable/rounded_rectangle_bg2"
@@ -151,14 +155,17 @@
                 </LinearLayout>
 
                 <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recProduct"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:paddingHorizontal="20dp"
+                    android:layout_height="wrap_content"
                     android:background="@color/white"/>
 
             </LinearLayout>
+
         </LinearLayout>
     </ScrollView>
+
+
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabCart"
@@ -166,8 +173,10 @@
         android:layout_height="wrap_content"
         android:layout_above="@id/btm_nav"
         android:layout_alignParentEnd="true"
-        android:layout_margin="15dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="15dp"
         android:layout_marginEnd="15dp"
+        android:layout_marginBottom="15dp"
         android:clickable="true"
         android:onClick="fnGoCart"
         app:backgroundTint="?attr/colorPrimary"
