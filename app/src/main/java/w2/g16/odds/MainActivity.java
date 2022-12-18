@@ -1,6 +1,7 @@
 package w2.g16.odds;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -18,9 +19,11 @@ import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.EventListener;
 import java.util.Vector;
 
 import w2.g16.odds.databinding.ActivityMainBinding;
@@ -107,8 +110,7 @@ public class MainActivity extends AppCompatActivity {
         binding.recCategory.setAdapter(adapter);
         binding.recCategory.setLayoutManager(new LinearLayoutManager(this,  RecyclerView.HORIZONTAL, false));
 
-
-        db.collection("product")
+        db.collection("products")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -123,15 +125,15 @@ public class MainActivity extends AppCompatActivity {
                                 //img = document.get("variation_image").toString();
                                 //price = document.get("variation_price").toString();
 
-                                /*if(document.getId() == "001"){
+                                if(document.getId() == "001"){
                                     String img = document.get("variation_image").toString();
                                     String price = document.get("variation_price").toString();
 
                                     products.add(new Product(name, price, null, null, img, shopname));
                                     adapterProduct.notifyItemInserted(products.size());
-                                }*/
+                                }
 
-                                DocumentReference docRef = db.collection("product").document(SKU)
+                                DocumentReference docRef = db.collection("products").document(SKU)
                                         .collection("variation").document("001");
                                 docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                                     @Override
@@ -155,7 +157,7 @@ public class MainActivity extends AppCompatActivity {
                                     }
                                 });
 
-                                /*db.collection("product/"+SKU+"/variation")
+                              /*  db.collection("product/"+SKU+"/variation")
                                         .get()
                                         .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                                             @Override

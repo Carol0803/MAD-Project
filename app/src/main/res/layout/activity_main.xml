@@ -88,17 +88,6 @@
                         android:textStyle="bold"
                         android:textFontWeight="2"/>
 
-                    <TextView
-                        android:id="@+id/tvMoreCat"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="right"
-                        android:layout_gravity="center"
-                        android:layout_weight="1"
-                        android:text="See All"
-                        android:fontFamily="@font/belleza"
-                        android:textSize="15sp"
-                        android:textColor="@color/white"/>
                 </LinearLayout>
 
                 <androidx.recyclerview.widget.RecyclerView
@@ -141,17 +130,6 @@
                         android:textStyle="bold"
                         android:textFontWeight="2"/>
 
-                    <TextView
-                        android:id="@+id/tvMoreRec"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="right"
-                        android:layout_gravity="center"
-                        android:layout_weight="1"
-                        android:text="See All"
-                        android:fontFamily="@font/belleza"
-                        android:textSize="15sp"
-                        android:textColor="@color/white"/>
                 </LinearLayout>
 
                 <androidx.recyclerview.widget.RecyclerView
