@@ -28,6 +28,8 @@ public class Cart {
         this.products = products;
     }*/
 
+    private String shopID;
+    private String cartID;
     private String SKU;
     private String product_name;
     private String variationID;
@@ -36,7 +38,9 @@ public class Cart {
     private String price;
     private String quantity;
 
-    public Cart(String SKU, String product_name, String variationID, String variation_type, String image, String price, String quantity) {
+    public Cart(String shopID, String cartID, String SKU, String product_name, String variationID, String variation_type, String image, String price, String quantity) {
+        this.shopID = shopID;
+        this.cartID = cartID;
         this.SKU = SKU;
         this.product_name = product_name;
         this.variationID = variationID;
@@ -44,6 +48,22 @@ public class Cart {
         this.image = image;
         this.price = price;
         this.quantity = quantity;
+    }
+
+    public String getShopID() {
+        return shopID;
+    }
+
+    public void setShopID(String shopID) {
+        this.shopID = shopID;
+    }
+
+    public String getCartID() {
+        return cartID;
+    }
+
+    public void setCartID(String cartID) {
+        this.cartID = cartID;
     }
 
     public String getSKU() {

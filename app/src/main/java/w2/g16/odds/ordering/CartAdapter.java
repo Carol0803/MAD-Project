@@ -1,6 +1,10 @@
 package w2.g16.odds.ordering;
 
+import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
+
 import android.app.Activity;
+import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,9 +12,21 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import org.checkerframework.checker.units.qual.A;
+
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Vector;
 
 import w2.g16.odds.model.Cart;
@@ -60,6 +76,12 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
     private final Vector<Shop> shops;
     private final Vector<Cart> carts;
     private int selectedPosition = -1;
+
+
+    private static final DecimalFormat df = new DecimalFormat("0.00");
+
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
+
 //    private ArrayList<Integer> selectCheck = new ArrayList<>();
 
 //    private final List<SelectableShop> selectableShops;
@@ -70,18 +92,6 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
         this.activity = activity;
         this.shops = shops;
         this.carts = carts;
-
-//        this.listener = listener;
-//        this.isMultiSelectionEnabled = isMultiSelectionEnabled;
-//
-//        selectableShops = new ArrayList<>();
-//        for (Shop shop : shops) {
-//            selectableShops.add(new SelectableShop(shop, false));
-//        }
-
-//        for (int i = 0; i < shops.size(); i++) {
-//            selectCheck.add(0);
-//        }
     }
 
     @NonNull
@@ -95,7 +105,6 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
     @Override
     public void onBindViewHolder(@NonNull CartViewHolder holder, int position) {
         Shop shop = shops.get(position);
-
         holder.tvShopname.setText(shop.getShopname());
 
         CartChildAdapter cartChildAdapter = new CartChildAdapter(carts);
@@ -109,13 +118,44 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
             notifyDataSetChanged();
         });
 
+//        ArrayList<Double> subtotal = new ArrayList<>();
+
         if (selectedPosition==position){
             holder.checkBox.setChecked(true);
+
+            db.collection("customer/username/cart/" + shop.getShopID() + "/cart_product")
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()) {
+                                Double total = 0.00;
+                                Double subtotal = 0.00;
+                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                    Log.d(TAG, document.getId() + " => " + document.getData());
+
+                                    String name = document.get("product_name").toString();
+                                    String variation = document.get("variation_name").toString();
+                                    String price = document.get("product_price").toString();
+                                    String quantity = document.get("quantity").toString();
+
+                                    subtotal = Double.parseDouble(price) * Double.parseDouble(quantity);
+                                    total += subtotal;
+                                }
+                                Intent intent = new Intent("custom-message");
+                                intent.putExtra("total",""+df.format(total));
+                                LocalBroadcastManager.getInstance(activity.getApplicationContext()).sendBroadcast(intent);
+                            } else {
+                                Log.d(TAG, "Error getting documents: ", task.getException());
+                            }
+                        }
+                    });
         }
         else {
             holder.checkBox.setChecked(false);
         }
 
+//        https://stackoverflow.com/questions/3572463/what-is-context-on-android
 /*
         if (selectCheck.get(position) == 1) {
             holder.checkBox.setChecked(true);

@@ -3,23 +3,33 @@ package w2.g16.odds.ordering;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.AggregateQuery;
+import com.google.firebase.firestore.AggregateQuerySnapshot;
+import com.google.firebase.firestore.AggregateSource;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.ArrayList;
 import java.util.Vector;
 
 import w2.g16.odds.MainActivity;
@@ -39,9 +49,9 @@ public class CartActivity extends AppCompatActivity {
     private Vector<Cart> carts;
     private Vector<Shop> shops;
     private CartAdapter adapter;
-    private String shopID;
 
     FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private int cart_item_count;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +70,8 @@ public class CartActivity extends AppCompatActivity {
             }
         });
 
+        LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver,
+                new IntentFilter("custom-message"));
         /*final String TAG = "Read Data Activity";
         db.collection("customer/username/cart")
                 .get()
@@ -117,6 +129,18 @@ public class CartActivity extends AppCompatActivity {
         binding.recCart.setAdapter(adapter);
         binding.recCart.setLayoutManager(new LinearLayoutManager(this));*/
 
+        /*CollectionReference collection = db.collection("customer/username/cart");
+        AggregateQuery countQuery = collection.count();
+        countQuery.get(AggregateSource.SERVER).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                AggregateQuerySnapshot snapshot = task.getResult();
+                Log.d(TAG, "Count: " + snapshot.getCount());
+                cart_item_count = Long.valueOf(snapshot.getCount()).intValue();
+            } else {
+                Log.d(TAG, "Count failed: ", task.getException());
+            }
+        });*/
+
         final String TAG = "Read Data Activity";
         db.collection("customer/username/cart")
                 .get()
@@ -127,7 +151,7 @@ public class CartActivity extends AppCompatActivity {
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 Log.d(TAG, document.getId() + " => " + document.getData());
 
-                                shopID = document.getId();
+                                String shopID = document.getId();
                                 String shopname = document.get("shop_name").toString();
 
                                 shops.add(new Shop(shopID, shopname));
@@ -141,6 +165,7 @@ public class CartActivity extends AppCompatActivity {
                                                     for (QueryDocumentSnapshot document : task.getResult()) {
                                                         Log.d(TAG, document.getId() + " => " + document.getData());
 
+                                                        String cartID = document.getId();
                                                         String SKU = document.get("SKU").toString();
                                                         String name = document.get("product_name").toString();
                                                         String variationID = document.get("variationID").toString();
@@ -152,7 +177,7 @@ public class CartActivity extends AppCompatActivity {
 //                                                        variations.add (new Variation(variationID, variation_name, img, price, quantity));
 //                                                        products.add(new Products(SKU, name, variations));
 //                                                        carts.add(new Cart(shop, products));
-                                                        carts.add(new Cart(SKU, name, variationID, variation_name, img, price, quantity));
+                                                        carts.add(new Cart(shopID, cartID, SKU, name, variationID, variation_name, img, price, quantity));
                                                         //adapter.notifyItemRangeInserted(adapter.getItemCount(),carts.size());
                                                         adapter.notifyItemChanged(carts.size());
                                                         //adapter.notifyItemChanged(recipePosition);
@@ -172,6 +197,7 @@ public class CartActivity extends AppCompatActivity {
                     }
                 });
 
+
         shops = new Vector<>();
         carts = new Vector<>();
         adapter = new CartAdapter(this, shops, carts);
@@ -185,4 +211,13 @@ public class CartActivity extends AppCompatActivity {
     public void fnCheckout(View view) {
         startActivity(new Intent(this, CheckoutActivity.class));
     }
+
+    public BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String total = intent.getStringExtra("total");
+            binding.tvTotalAmount.setText("RM: " + total);
+        }
+    };
+    // https://stackoverflow.com/questions/35008860/how-to-pass-values-from-recycleadapter-to-mainactivity-or-other-activities
 }
