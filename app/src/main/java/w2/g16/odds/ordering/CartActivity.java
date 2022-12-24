@@ -26,10 +26,12 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
 
 import w2.g16.odds.MainActivity;
@@ -49,8 +51,10 @@ public class CartActivity extends AppCompatActivity {
     private Vector<Cart> carts;
     private Vector<Shop> shops;
     private CartAdapter adapter;
+    private Vector<String> shop_lists;
 
     FirebaseFirestore db = FirebaseFirestore.getInstance();
+
     private int cart_item_count;
 
     @Override
@@ -71,7 +75,7 @@ public class CartActivity extends AppCompatActivity {
         });
 
         LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver,
-                new IntentFilter("custom-message"));
+                new IntentFilter("return_total"));
         /*final String TAG = "Read Data Activity";
         db.collection("customer/username/cart")
                 .get()
@@ -155,6 +159,7 @@ public class CartActivity extends AppCompatActivity {
                                 String shopname = document.get("shop_name").toString();
 
                                 shops.add(new Shop(shopID, shopname));
+//                                shop_lists.add(shopID);
 
                                 db.collection("customer/username/cart/" + shopID + "/cart_product")
                                         .get()
@@ -162,53 +167,108 @@ public class CartActivity extends AppCompatActivity {
                                             @Override
                                             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                                 if (task.isSuccessful()) {
+                                                    String cartID = null, deliver_by = null, SKU = null, name = null, variationID = null,
+                                                            variation_name = null, price = null, quantity = null, img = null;
+//                                                    carts.clear();
                                                     for (QueryDocumentSnapshot document : task.getResult()) {
                                                         Log.d(TAG, document.getId() + " => " + document.getData());
 
-                                                        String cartID = document.getId();
-                                                        String SKU = document.get("SKU").toString();
-                                                        String name = document.get("product_name").toString();
-                                                        String variationID = document.get("variationID").toString();
-                                                        String variation_name = document.get("variation_name").toString();
-                                                        String price = document.get("product_price").toString();
-                                                        String quantity = document.get("quantity").toString();
-                                                        String img = document.get("product_image").toString();
+                                                        cartID = document.getId();
+                                                        deliver_by = document.get("deliver_by").toString();
+                                                        SKU = document.get("SKU").toString();
+                                                        name = document.get("product_name").toString();
+                                                        variationID = document.get("variationID").toString();
+                                                        variation_name = document.get("variation_name").toString();
+                                                        price = document.get("product_price").toString();
+                                                        quantity = document.get("quantity").toString();
+                                                        img = document.get("product_image").toString();
 
+                                                        //if(deliver_by.equals(shopID) ){
 //                                                        variations.add (new Variation(variationID, variation_name, img, price, quantity));
 //                                                        products.add(new Products(SKU, name, variations));
 //                                                        carts.add(new Cart(shop, products));
                                                         carts.add(new Cart(shopID, cartID, SKU, name, variationID, variation_name, img, price, quantity));
-                                                        //adapter.notifyItemRangeInserted(adapter.getItemCount(),carts.size());
+                                                            //adapter.notifyItemRangeInserted(adapter.getItemCount(),carts.size());
                                                         adapter.notifyItemChanged(carts.size());
-                                                        //adapter.notifyItemChanged(recipePosition);
-                                                        //binding.recCart.getAdapter().notifyItemInserted(recipe.getDishs().size()-1);
 
+                                                            //adapter.notifyItemChanged(recipePosition);
+                                                            //binding.recCart.getAdapter().notifyItemInserted(recipe.getDishs().size()-1);
+                                                        //}
                                                     }
+//                                                    carts = new Vector<>();
+
                                                 } else {
                                                     Log.d(TAG, "Error getting documents: ", task.getException());
                                                 }
                                             }
                                         });
 
+//                                CollectionReference itemsRef = db.collection("cart_product");
+//                                Query query = itemsRef.whereEqualTo("deliver_by", shopID);
+
+
                             }
+                        /*    for(String shop_list : shop_lists){
+                                db.collection("customer/username/cart/" + shop_list + "/cart_product")
+                                        .get()
+                                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                if (task.isSuccessful()) {
+                                                    String cartID = null, deliver_by = null, SKU = null, name = null, variationID = null,
+                                                            variation_name = null, price = null, quantity = null, img = null;
+//                                                    carts.clear();
+                                                    for (QueryDocumentSnapshot document : task.getResult()) {
+                                                        Log.d(TAG, document.getId() + " => " + document.getData());
+
+                                                        cartID = document.getId();
+                                                        deliver_by = document.get("deliver_by").toString();
+                                                        SKU = document.get("SKU").toString();
+                                                        name = document.get("product_name").toString();
+                                                        variationID = document.get("variationID").toString();
+                                                        variation_name = document.get("variation_name").toString();
+                                                        price = document.get("product_price").toString();
+                                                        quantity = document.get("quantity").toString();
+                                                        img = document.get("product_image").toString();
+
+                                                        //if(deliver_by.equals(shopID) ){
+//                                                        variations.add (new Variation(variationID, variation_name, img, price, quantity));
+//                                                        products.add(new Products(SKU, name, variations));
+//                                                        carts.add(new Cart(shop, products));
+                                                        carts.add(new Cart(shop_list, cartID, SKU, name, variationID, variation_name, img, price, quantity));
+                                                        //adapter.notifyItemRangeInserted(adapter.getItemCount(),carts.size());
+
+                                                        //adapter.notifyItemChanged(recipePosition);
+                                                        //binding.recCart.getAdapter().notifyItemInserted(recipe.getDishs().size()-1);
+                                                        //}
+                                                    }
+                                                    adapter.notifyItemChanged(carts.size());
+                                                    carts = new Vector<>();
+
+                                                } else {
+                                                    Log.d(TAG, "Error getting documents: ", task.getException());
+                                                }
+                                            }
+                                        });
+                            }*/
                         } else {
                             Log.d(TAG, "Error getting documents: ", task.getException());
                         }
                     }
                 });
 
-
+//        shop_lists = new Vector<>();
         shops = new Vector<>();
         carts = new Vector<>();
         adapter = new CartAdapter(this, shops, carts);
 
         binding.recCart.setLayoutManager(new LinearLayoutManager(this));
         binding.recCart.setAdapter(adapter);
-
-
     }
 
     public void fnCheckout(View view) {
+//        Intent intent = new Intent();
+//        intent.putExtra("objAddress", address_chosen);
         startActivity(new Intent(this, CheckoutActivity.class));
     }
 
@@ -216,6 +276,7 @@ public class CartActivity extends AppCompatActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             String total = intent.getStringExtra("total");
+//            List<Order> items = (List<Order>) intent.getSerializableExtra("order");
             binding.tvTotalAmount.setText("RM: " + total);
         }
     };

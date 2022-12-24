@@ -1,6 +1,7 @@
 package w2.g16.odds.ordering;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +9,7 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.Vector;
@@ -39,56 +41,40 @@ public class ChooseAddressAdapter extends RecyclerView.Adapter<ChooseAddressAdap
     public void onBindViewHolder(@NonNull ChooseAddressViewHolder holder, int position) {
         Address address = addresses.get(position);
 
-        holder.tvRecipientName.setText(address.getReceiver_name());
-        holder.tvTel.setText(address.getReceiver_tel());
-        holder.tvAddr1.setText(address.getAddr1());
-        holder.tvAddr2.setText(address.getAddr2());
-        holder.tvCity.setText(address.getCity());
-        holder.tvPostcode.setText(address.getPostcode());
-        holder.tvState.setText(address.getState());
+        String recipient_name = address.getReceiver_name();
+        String receipient_tel = address.getReceiver_tel();
+        String addr1 = address.getAddr1();
+        String addr2 = address.getAddr2();
+        String city = address.getCity();
+        String postcode = address.getPostcode();
+        String state = address.getState();
+        String isDefault = address.getIsDefault();
+
+        holder.tvRecipientName.setText(recipient_name);
+        holder.tvTel.setText(receipient_tel);
+        holder.tvAddr1.setText(addr1);
+        holder.tvAddr2.setText(addr2);
+        holder.tvCity.setText(city);
+        holder.tvPostcode.setText(postcode);
+        holder.tvState.setText(state);
+
+        /*if(isDefault.equals("true")){
+            holder.checkBox.setChecked(true);
+        }*/
 
         holder.checkBox.setOnClickListener(view -> {
             selectedPosition = holder.getAdapterPosition();
             notifyDataSetChanged();
         });
-
-        holder.checkBox.setOnClickListener(view -> {
-            selectedPosition = holder.getAdapterPosition();
-            notifyDataSetChanged();
-        });
-
-//        ArrayList<Double> subtotal = new ArrayList<>();
 
         if (selectedPosition==position){
             holder.checkBox.setChecked(true);
 
-            /*db.collection("customer/username/cart/" + shop.getShopID() + "/cart_product")
-                    .get()
-                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                            if (task.isSuccessful()) {
-                                Double total = 0.00;
-                                Double subtotal = 0.00;
-                                for (QueryDocumentSnapshot document : task.getResult()) {
-                                    Log.d(TAG, document.getId() + " => " + document.getData());
+            Address address_choosen = new Address(recipient_name, receipient_tel, addr1, addr2, city, postcode, state, isDefault);
 
-                                    String name = document.get("product_name").toString();
-                                    String variation = document.get("variation_name").toString();
-                                    String price = document.get("product_price").toString();
-                                    String quantity = document.get("quantity").toString();
-
-                                    subtotal = Double.parseDouble(price) * Double.parseDouble(quantity);
-                                    total += subtotal;
-                                }
-                                Intent intent = new Intent("custom-message");
-                                intent.putExtra("total",""+df.format(total));
-                                LocalBroadcastManager.getInstance(activity.getApplicationContext()).sendBroadcast(intent);
-                            } else {
-                                Log.d(TAG, "Error getting documents: ", task.getException());
-                            }
-                        }
-                    });*/
+            Intent intent = new Intent("return_address");
+            intent.putExtra("objAddress", address_choosen);
+            LocalBroadcastManager.getInstance(activity.getApplicationContext()).sendBroadcast(intent);
         }
         else {
             holder.checkBox.setChecked(false);

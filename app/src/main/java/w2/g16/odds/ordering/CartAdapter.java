@@ -24,13 +24,17 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import org.checkerframework.checker.units.qual.A;
 
+import java.sql.Array;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Vector;
 
 import w2.g16.odds.model.Cart;
 import w2.g16.odds.R;
+import w2.g16.odds.model.Order;
+import w2.g16.odds.model.Products;
 import w2.g16.odds.model.Shop;
 
 public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder>  {
@@ -75,8 +79,8 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
     private Activity activity;
     private final Vector<Shop> shops;
     private final Vector<Cart> carts;
+//    private List<Order> orders = new ArrayList<Order>();
     private int selectedPosition = -1;
-
 
     private static final DecimalFormat df = new DecimalFormat("0.00");
 
@@ -141,9 +145,12 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
 
                                     subtotal = Double.parseDouble(price) * Double.parseDouble(quantity);
                                     total += subtotal;
+
+//                                    orders.add(new Order(name, variation, price, quantity));
                                 }
-                                Intent intent = new Intent("custom-message");
+                                Intent intent = new Intent("return_total");
                                 intent.putExtra("total",""+df.format(total));
+//                                intent.putExtra("order", orders);
                                 LocalBroadcastManager.getInstance(activity.getApplicationContext()).sendBroadcast(intent);
                             } else {
                                 Log.d(TAG, "Error getting documents: ", task.getException());

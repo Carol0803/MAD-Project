@@ -69,7 +69,8 @@
             android:paddingHorizontal="15dp"
             android:text="Cash"
             android:textColor="@color/black"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            android:onClick="onRadioButtonClicked"/>
 
         <View
             android:layout_width="match_parent"
@@ -82,11 +83,12 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/belleza"
             android:paddingHorizontal="15dp"
-            android:text="Credit/Debit Card"
+            android:text="PayPal"
             android:textColor="@color/black"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            android:onClick="onRadioButtonClicked"/>
 
-        <View
+        <!--<View
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="#BFC5CC" />
@@ -99,7 +101,8 @@
             android:paddingHorizontal="15dp"
             android:text="OnlineBanking"
             android:textColor="@color/black"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            android:onClick="onRadioButtonClicked"/>-->
 
     </RadioGroup>
 

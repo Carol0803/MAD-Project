@@ -3,9 +3,13 @@ package w2.g16.odds.ordering;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -18,13 +22,9 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.Vector;
 
-import w2.g16.odds.MainActivity;
 import w2.g16.odds.R;
-import w2.g16.odds.databinding.ActivityCheckoutBinding;
 import w2.g16.odds.databinding.ActivityChooseAddressBinding;
 import w2.g16.odds.model.Address;
-import w2.g16.odds.model.Cart;
-import w2.g16.odds.model.Shop;
 
 public class ChooseAddressActivity extends AppCompatActivity {
 
@@ -33,6 +33,7 @@ public class ChooseAddressActivity extends AppCompatActivity {
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     private Vector<Address> addresses;
     private ChooseAddressAdapter adapter;
+    private Address address_chosen;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +67,7 @@ public class ChooseAddressActivity extends AppCompatActivity {
                             String postcode = null;
                             String state = null;
                             String location = null;
+                            String isDefault = null;
 
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 Log.d(TAG, document.getId() + " => " + document.getData());
@@ -79,8 +81,9 @@ public class ChooseAddressActivity extends AppCompatActivity {
                                 location = document.get("location").toString();
                                 receiver_name = document.get("receiver_name").toString();
                                 receiver_tel = document.get("receiver_tel").toString();
+                                isDefault = document.get("default").toString();
 
-                                addresses.add(new Address(receiver_name, receiver_tel, addr1, addr2, city, postcode, state));
+                                addresses.add(new Address(receiver_name, receiver_tel, addr1, addr2, city, postcode, state, isDefault));
                                 adapter.notifyItemChanged(addresses.size());
                             }
                         } else {
@@ -94,5 +97,28 @@ public class ChooseAddressActivity extends AppCompatActivity {
 
         binding.recAddressList.setLayoutManager(new LinearLayoutManager(this));
         binding.recAddressList.setAdapter(adapter);
+
+        binding.btnConfirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent2 = new Intent();
+                intent2.putExtra("objAddress", address_chosen);
+                setResult(RESULT_OK, intent2);
+                finish();
+            }
+        });
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver,
+                new IntentFilter("return_address"));
+
+
     }
+
+    public BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            address_chosen = (Address) intent.getSerializableExtra("objAddress");
+        }
+    };
+
 }

@@ -1,6 +1,8 @@
 package w2.g16.odds.model;
 
-public class Address {
+import java.io.Serializable;
+
+public class Address implements Serializable {
 
     private String receiver_name;
     private String receiver_tel;
@@ -9,8 +11,9 @@ public class Address {
     private String city;
     private String postcode;
     private String state;
+    private String isDefault;
 
-    public Address(String receiver_name, String receiver_tel, String addr1, String addr2, String city, String postcode, String state) {
+    public Address(String receiver_name, String receiver_tel, String addr1, String addr2, String city, String postcode, String state, String isDefault) {
         this.receiver_name = receiver_name;
         this.receiver_tel = receiver_tel;
         this.addr1 = addr1;
@@ -18,6 +21,7 @@ public class Address {
         this.city = city;
         this.postcode = postcode;
         this.state = state;
+        this.isDefault = isDefault;
     }
 
     public String getReceiver_name() {
@@ -74,5 +78,13 @@ public class Address {
 
     public void setState(String state) {
         this.state = state;
+    }
+
+    public String getIsDefault() {
+        return isDefault;
+    }
+
+    public void setIsDefault(String isDefault) {
+        this.isDefault = isDefault;
     }
 }

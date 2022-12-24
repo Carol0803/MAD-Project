@@ -12,12 +12,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -117,6 +121,7 @@ public class CartChildAdapter extends RecyclerView.Adapter<CartChildAdapter.Cart
         holder.btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 int newQuantity = Integer.parseInt(cart.getQuantity()) + 1;
                 holder.quantity.setText("" + newQuantity);
 
@@ -142,6 +147,7 @@ public class CartChildAdapter extends RecyclerView.Adapter<CartChildAdapter.Cart
         holder.btnMinus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 int newQuantity = Integer.parseInt(cart.getQuantity()) - 1;
                 holder.quantity.setText("" + newQuantity);
 

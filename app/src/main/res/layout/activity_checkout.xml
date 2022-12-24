@@ -145,7 +145,7 @@
                     <TextView
                         android:id="@+id/tvChangeAddress"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="17dp"
                         android:layout_column="1"
                         android:layout_gravity="center"
                         android:clickable="true"
@@ -232,12 +232,11 @@
 
             </TableLayout>
 
-            <!--
             <LinearLayout
                 android:id="@+id/lytDeliveryTime"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="35dp"
+                android:layout_marginHorizontal="20dp"
                 android:layout_marginVertical="15dp"
                 android:background="@drawable/rounded_rectangle_bg"
                 android:orientation="vertical">
@@ -255,45 +254,32 @@
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_marginHorizontal="30dp"
+                    android:layout_marginBottom="5dp"
                     android:background="#BFC5CC" />
 
-                <com.google.android.material.tabs.TabLayout
-                    android:id="@+id/tabDeliveryTime"
+                <Button
+                    android:id="@+id/btnChooseTime"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="35dp"
-                    android:layout_marginVertical="5dp"
-                    app:tabGravity="fill"
-                    app:tabMode="fixed">
+                    android:layout_gravity="center"
+                    android:layout_marginHorizontal="40dp"
+                    android:text="Choose Date of Delivery/Self Collection"
+                    android:fontFamily="@font/belleza"
+                    android:textSize="15sp"
+                    android:textColor="@color/black"
+                    android:textAllCaps="false"
+                    android:backgroundTint="#F8F8F8"/>
 
-                    <com.google.android.material.tabs.TabItem
-                        android:id="@+id/tab1"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Date" />
-
-                    <com.google.android.material.tabs.TabItem
-                        android:id="@+id/tab2"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Date" />
-
-                    <com.google.android.material.tabs.TabItem
-                        android:id="@+id/tab3"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Date" />
-
-                </com.google.android.material.tabs.TabLayout>
-
-                <androidx.viewpager2.widget.ViewPager2
-                    android:id="@+id/viewTimeSelection"
+                <TextView
+                    android:id="@+id/tvDTime"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="35dp" />
+                    android:layout_marginBottom="10dp"
+                    android:gravity="center"
+                    android:layout_marginHorizontal="40dp"/>
+
 
             </LinearLayout>
-            -->
 
             <Button
                 android:id="@+id/btnNext"

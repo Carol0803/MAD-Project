@@ -104,7 +104,7 @@ public class OrderActivity extends AppCompatActivity {
                                                 String subtotal = document.get("subtotal").toString();
                                                 String img = document.get("variation_image").toString();
 
-                                                orders.add(new Order(orderID, amount, shopName, name, variation, quantity, subtotal, img));
+                                                orders.add(new Order(orderID, amount, shopName, name, variation, null, quantity, subtotal, img));
                                                 adapter.notifyItemInserted(orders.size());
                                             } else {
                                                 Log.d(TAG, "No such document");
