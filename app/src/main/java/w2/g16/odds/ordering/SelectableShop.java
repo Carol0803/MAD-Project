@@ -1,3 +1,4 @@
+/*
 package w2.g16.odds.ordering;
 
 import w2.g16.odds.model.Shop;
@@ -23,3 +24,4 @@ public class SelectableShop extends Shop {
         isSelected = selected;
     }
 }
+*/

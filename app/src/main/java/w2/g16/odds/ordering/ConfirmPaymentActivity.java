@@ -3,20 +3,25 @@ package w2.g16.odds.ordering;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 
+import com.google.gson.Gson;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.TextHttpResponseHandler;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Date;
+
 import okhttp3.internal.http2.Header;
-import w2.g16.odds.databinding.ActivityChoosePaymentBinding;
 import w2.g16.odds.databinding.ActivityConfirmPaymentBinding;
+import w2.g16.odds.model.Address;
 
 public class ConfirmPaymentActivity extends AppCompatActivity {
 
@@ -32,6 +37,10 @@ public class ConfirmPaymentActivity extends AppCompatActivity {
         //get the orderID from the query parameter
         Uri redirectUri = getIntent().getData();
         orderID = redirectUri.getQueryParameter("token");
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        Gson gson = new Gson();
+        amount = prefs.getString("total", "");
 
         //set the orderID string to the UI
         binding.tvPaymentAmount.setText("Amount: " + amount);
@@ -66,8 +75,7 @@ public class ConfirmPaymentActivity extends AppCompatActivity {
                 try {
                     JSONObject jobj = new JSONObject(responseString);
                     //redirect back to home page of app
-                    Intent intent = new Intent(getApplicationContext(), OrderPlacedActivity.class);
-//                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    Intent intent = new Intent(ConfirmPaymentActivity.this, OrderPlacedActivity.class);
                     startActivity(intent);
                 } catch (JSONException e) {
                     e.printStackTrace();

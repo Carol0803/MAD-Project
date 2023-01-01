@@ -5,16 +5,20 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.browser.customtabs.CustomTabsIntent;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 
 import com.google.firebase.Timestamp;
+import com.google.gson.Gson;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.TextHttpResponseHandler;
 
@@ -23,8 +27,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Objects;
+import java.util.Vector;
 
 import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.HttpEntity;
@@ -33,6 +39,7 @@ import w2.g16.odds.R;
 import w2.g16.odds.databinding.ActivityCheckout2Binding;
 import w2.g16.odds.databinding.ActivityCheckoutBinding;
 import w2.g16.odds.model.Address;
+import w2.g16.odds.model.Order;
 
 public class CheckoutActivity2 extends AppCompatActivity {
 
@@ -42,9 +49,13 @@ public class CheckoutActivity2 extends AppCompatActivity {
     private String payment_method;
     private Date deliveryTime;
     private Timestamp delivery_time;
+    private String shopname;
+    private ArrayList<Order> order_lists;
+    private Checkout2Adapter adapter;
+    private String total;
 
-    static String accessToken = "A21AAL3R4kUh6zhKc2csEPNiu_3uaUpo_aBGMRklMLTVHMB6TqHbwsiFMTAuQho0aJCFEAnVSRJ1ezDexLltXFBa_Oa_XRiEQ";
-    String amount = "1.00";
+    static String accessToken = "A21AAJMcX_wmPcEDpHtNEZBo3lsDRPAy1Vz7bTHLBAoJMz1QKyazE9CVlRTIxlpLt0zNpLYSKctJQvM86IT6smh7U5ELtQ2zA";
+    private String amount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +79,12 @@ public class CheckoutActivity2 extends AppCompatActivity {
         address = (Address) intent.getSerializableExtra("address");
         deliveryTime = (Date) intent.getSerializableExtra("delivery_time");
         delivery_time = new Timestamp(deliveryTime);
+        shopname = intent.getStringExtra("shopname");
+        order_lists = (ArrayList<Order>) intent.getSerializableExtra("order");
+        adapter = new Checkout2Adapter(getLayoutInflater(), order_lists);
+
+        binding.recProducts.setLayoutManager(new LinearLayoutManager(this));
+        binding.recProducts.setAdapter(adapter);
 
         binding.tvRecipientName.setText(address.getReceiver_name());
         binding.tvTel.setText(address.getReceiver_tel());
@@ -93,6 +110,27 @@ public class CheckoutActivity2 extends AppCompatActivity {
                 onBackPressed();
             }
         });
+
+        binding.tvShopName.setText(shopname);
+
+        total = intent.getStringExtra("total");
+        binding.tvTotalAmount.setText("RM: " + total);
+        amount = total;
+
+        Gson gson = new Gson();
+        String json_address = gson.toJson(address);
+        String json_order_lists = gson.toJson(order_lists);
+        String json_deliveryTime = gson.toJson(deliveryTime);
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString("delivery_method", delivery_method);
+        editor.putString("address", json_address);
+        editor.putString("delivery_time", json_deliveryTime);
+        editor.putString("shopname", shopname);
+        editor.putString("order", json_order_lists);
+        editor.putString("total", total);
+        editor.commit();
     }
 
     public void fnGoChoosePayment(View view) {
@@ -175,11 +213,18 @@ public class CheckoutActivity2 extends AppCompatActivity {
     public void fnProceed(View view) {
         if(payment_method.equals("Cash")){
             Intent intent = new Intent(getApplicationContext(), OrderPlacedActivity.class);
+            /*intent.putExtra("delivery_method", delivery_method);
+            intent.putExtra("address", address);
+            intent.putExtra("delivery_time", deliveryTime);
+            intent.putExtra("shopname", shopname);
+            intent.putExtra("order", order_lists);
+            intent.putExtra("total", total);*/
             startActivity(intent);
         }
-        if (payment_method.equals("PayPal"))
+        if (payment_method.equals("PayPal")){
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 createOrder();
             }
+        }
     }
 }

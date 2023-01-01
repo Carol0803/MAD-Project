@@ -1,5 +1,7 @@
 package w2.g16.odds.model;
 
+import java.util.List;
+
 public class Shop {
 
     private String shopID;
@@ -13,10 +15,19 @@ public class Shop {
     private String state;
     private String owner;
     private String rating;
+    private List<Cart> cartList;
+
+    public Shop(){}
 
     public Shop(String shopID, String shopname) {
         this.shopID = shopID;
         this.shopname = shopname;
+    }
+
+    public Shop(String shopID, String shopname, List<Cart> cartList) {
+        this.shopID = shopID;
+        this.shopname = shopname;
+        this.cartList = cartList;
     }
 
     public Shop(String shopID, String shopname, String tel_no, String operating_hour, String addr1, String addr2, String city, String postcode, String state, String owner, String rating) {
@@ -119,6 +130,14 @@ public class Shop {
 
     public void setRating(String rating) {
         this.rating = rating;
+    }
+
+    public List<Cart> getCartList() {
+        return cartList;
+    }
+
+    public void setCartList(List<Cart> cartList) {
+        this.cartList = cartList;
     }
 
     @Override

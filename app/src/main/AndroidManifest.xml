@@ -13,11 +13,33 @@
         android:theme="@style/Theme.ODDS"
         tools:targetApi="31">
         <activity
+            android:name=".product_browsing.ViewCategoryActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".product_browsing.ViewShopActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".product_browsing.ViewProductActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
             android:name=".ordering.ConfirmPaymentActivity"
             android:exported="true">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
+
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -67,7 +89,8 @@
         <activity
             android:name=".ordering.CheckoutActivity2"
             android:exported="true">
-<!--            android:launchMode="singleTop">-->
+
+            <!-- android:launchMode="singleTop"> -->
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -102,13 +125,6 @@
         </activity>
         <activity
             android:name=".shop_recommendation.shop_recommendation"
-            android:exported="false">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
-            android:name=".product_browsing.product_browsing"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"

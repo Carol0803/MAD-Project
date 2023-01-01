@@ -1,13 +1,16 @@
 package w2.g16.odds;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -16,21 +19,19 @@ import android.view.View;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationBarView;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.util.EventListener;
 import java.util.Vector;
 
 import w2.g16.odds.databinding.ActivityMainBinding;
 import w2.g16.odds.model.Category;
-import w2.g16.odds.model.Product;
+import w2.g16.odds.model.Products;
 import w2.g16.odds.ordering.CartActivity;
 import w2.g16.odds.ordering.OrderActivity;
+import w2.g16.odds.product_browsing.ViewCategoryActivity;
+import w2.g16.odds.product_browsing.ViewProductActivity;
 import w2.g16.odds.shop_recommendation.shop_recommendation;
 
 public class MainActivity extends AppCompatActivity {
@@ -40,8 +41,8 @@ public class MainActivity extends AppCompatActivity {
     private Category category;
     private Vector<Category> categories;
     private CategoryAdapter adapter;
-    private Product product;
-    private Vector<Product> products;
+//    private Product product;
+    private Vector<Products> products;
     private ProductAdapter adapterProduct;
     //private String name, shopname, img, price;
 
@@ -62,10 +63,6 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.home:
                         return true;
                     case R.id.recommendation:
-                        startActivity(new Intent(getApplicationContext(), shop_recommendation.class));
-                        overridePendingTransition(0,0);
-                        return true;
-                    case R.id.notification:
                         startActivity(new Intent(getApplicationContext(), shop_recommendation.class));
                         overridePendingTransition(0,0);
                         return true;
@@ -92,10 +89,11 @@ public class MainActivity extends AppCompatActivity {
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 Log.d(TAG, document.getId() + " => " + document.getData());
 
+                                String categoryID = document.getId();
                                 String name = document.get("category_name").toString();
                                 String img = document.get("icon_url").toString();
 
-                                categories.add(new Category(name, img));
+                                categories.add(new Category(categoryID, name, img));
                                 adapter.notifyItemInserted(categories.size());
                             }
                         } else {
@@ -105,10 +103,13 @@ public class MainActivity extends AppCompatActivity {
                 });
 
         categories = new Vector<>();
-        adapter = new CategoryAdapter(getLayoutInflater(), categories);
+        adapter = new CategoryAdapter(this, getLayoutInflater(), categories);
 
         binding.recCategory.setAdapter(adapter);
         binding.recCategory.setLayoutManager(new LinearLayoutManager(this,  RecyclerView.HORIZONTAL, false));
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver2,
+                new IntentFilter("category_ID"));
 
         db.collection("products")
                 .get()
@@ -121,19 +122,18 @@ public class MainActivity extends AppCompatActivity {
 
                                 String SKU = document.getId();
                                 String name = document.get("product_name").toString();
-                                String shopname = document.get("owned by").toString();
-                                //img = document.get("variation_image").toString();
-                                //price = document.get("variation_price").toString();
+                                String shopID = document.get("owned by").toString();
+                                String img = document.get("image").toString();
+                                String price = document.get("price").toString();
+                                products.add(new Products(SKU, name, img, price, shopID));
+                                adapterProduct.notifyItemInserted(products.size());
 
-                                if(document.getId() == "001"){
-                                    String img = document.get("variation_image").toString();
-                                    String price = document.get("variation_price").toString();
 
-                                    products.add(new Product(name, price, null, null, img, shopname));
-                                    adapterProduct.notifyItemInserted(products.size());
-                                }
+//                                    products.add(new Product(SKU, name, price, null, null, img, shopname));
+//                                    adapterProduct.notifyItemInserted(products.size());
+//                                }
 
-                                DocumentReference docRef = db.collection("products").document(SKU)
+                             /*   DocumentReference docRef = db.collection("products").document(SKU)
                                         .collection("variation").document("001");
                                 docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                                     @Override
@@ -146,7 +146,7 @@ public class MainActivity extends AppCompatActivity {
                                                 String img = document.get("variation_image").toString();
                                                 String price = document.get("variation_price").toString();
 
-                                                products.add(new Product(name, price, img, shopname));
+                                                products.add(new Product(SKU, name, price, img, shopname));
                                                 adapterProduct.notifyItemInserted(products.size());
                                             } else {
                                                 Log.d(TAG, "No such document");
@@ -155,7 +155,7 @@ public class MainActivity extends AppCompatActivity {
                                             Log.d(TAG, "get failed with ", task.getException());
                                         }
                                     }
-                                });
+                                });*/
 
                               /*  db.collection("product/"+SKU+"/variation")
                                         .get()
@@ -192,15 +192,36 @@ public class MainActivity extends AppCompatActivity {
                 });
 
         products = new Vector<>();
-        adapterProduct = new ProductAdapter(getLayoutInflater(), products);
+        adapterProduct = new ProductAdapter(this, getLayoutInflater(), products);
 
         binding.recProduct.setAdapter(adapterProduct);
         binding.recProduct.setLayoutManager(new GridLayoutManager(this, 2, RecyclerView.VERTICAL, false));
 
-
+        LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver,
+                new IntentFilter("product_SKU"));
     }
 
     public void fnGoCart(View view) {
         startActivity(new Intent(getApplicationContext(), CartActivity.class));
     }
+
+    public BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String SKU = intent.getStringExtra("SKU");
+            Intent intent2 = new Intent(getApplicationContext(), ViewProductActivity.class);
+            intent2.putExtra("SKU", SKU);
+            startActivity(intent2);
+        }
+    };
+
+    public BroadcastReceiver mMessageReceiver2 = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String categoryID = intent.getStringExtra("category_ID");
+            Intent intent3 = new Intent(getApplicationContext(), ViewCategoryActivity.class);
+            intent3.putExtra("category_ID", categoryID);
+            startActivity(intent3);
+        }
+    };
 }

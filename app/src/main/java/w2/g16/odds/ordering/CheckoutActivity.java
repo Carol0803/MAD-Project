@@ -22,12 +22,14 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.time.Month;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
 import w2.g16.odds.R;
 import w2.g16.odds.databinding.ActivityCheckoutBinding;
 import w2.g16.odds.model.Address;
+import w2.g16.odds.model.Order;
 
 public class CheckoutActivity extends AppCompatActivity {
 
@@ -35,7 +37,10 @@ public class CheckoutActivity extends AppCompatActivity {
     private DatePickerDialog datePicker;
     private String delivery_method;
     private Address address;
+    private String selected_order_shopname;
+    private ArrayList<Order> orders;
     private static Date delivery_time;
+    private String total;
 
     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -69,6 +74,11 @@ public class CheckoutActivity extends AppCompatActivity {
             }
         });
 
+        Intent intent = getIntent();
+        selected_order_shopname = intent.getStringExtra("shopname");
+        orders = (ArrayList<Order>) intent.getSerializableExtra("order");
+        total = intent.getStringExtra("total");
+
     }
 
     public void fnChangeAddress(View view) {
@@ -80,6 +90,9 @@ public class CheckoutActivity extends AppCompatActivity {
         intent.putExtra("delivery_method", delivery_method);
         intent.putExtra("address", address);
         intent.putExtra("delivery_time", delivery_time);
+        intent.putExtra("shopname", selected_order_shopname);
+        intent.putExtra("order", orders);
+        intent.putExtra("total", total);
         startActivity(intent);
     }
 

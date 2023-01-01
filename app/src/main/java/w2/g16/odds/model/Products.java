@@ -2,32 +2,49 @@ package w2.g16.odds.model;
 
 import java.util.Vector;
 
-public class Products {
+public class Products implements Comparable<Products> {
 
     private String SKU;
     private String product_name;
     private String description;
     private String rating;
     private String status;
-    private Shop shop;
-    private Category category;
-    private Vector<Variation> variation;
+    private String image;
+    private String price;
+    private String owned_by;
+    private int sold_item;
+    private String stock;
+    private String under_category;
 
-    public Products(String SKU, String product_name, String description, String rating, String status, Shop shop, Category category, Vector<Variation> variation) {
+    public Products(String SKU, String product_name, String description, String rating, String status, String image, String price, String owned_by, int sold_item, String stock, String under_category) {
         this.SKU = SKU;
         this.product_name = product_name;
         this.description = description;
         this.rating = rating;
         this.status = status;
-        this.shop = shop;
-        this.category = category;
-        this.variation = variation;
+        this.image = image;
+        this.price = price;
+        this.owned_by = owned_by;
+        this.sold_item = sold_item;
+        this.stock = stock;
+        this.under_category = under_category;
     }
 
-    public Products(String SKU, String product_name, Vector<Variation> variation) {
+    public Products(String SKU, String product_name, String image, String price, String owned_by) {
         this.SKU = SKU;
         this.product_name = product_name;
-        this.variation = variation;
+        this.image = image;
+        this.price = price;
+        this.owned_by = owned_by;
+    }
+
+    public Products(String SKU, String product_name, String image, String price, String owned_by, int sold_item) {
+        this.SKU = SKU;
+        this.product_name = product_name;
+        this.image = image;
+        this.price = price;
+        this.owned_by = owned_by;
+        this.sold_item = sold_item;
     }
 
     public String getSKU() {
@@ -70,27 +87,58 @@ public class Products {
         this.status = status;
     }
 
-    public Shop getShop() {
-        return shop;
+    public String getImage() {
+        return image;
     }
 
-    public void setShop(Shop shop) {
-        this.shop = shop;
+    public void setImage(String image) {
+        this.image = image;
     }
 
-    public Category getCategory() {
-        return category;
+    public String getPrice() {
+        return price;
     }
 
-    public void setCategory(Category category) {
-        this.category = category;
+    public void setPrice(String price) {
+        this.price = price;
     }
 
-    public Vector<Variation> getVariation() {
-        return variation;
+    public String getOwned_by() {
+        return owned_by;
     }
 
-    public void setVariation(Vector<Variation> variation) {
-        this.variation = variation;
+    public void setOwned_by(String owned_by) {
+        this.owned_by = owned_by;
+    }
+
+    public int getSold_item() {
+        return sold_item;
+    }
+
+    public void setSold_item(int sold_item) {
+        this.sold_item = sold_item;
+    }
+
+    public String getStock() {
+        return stock;
+    }
+
+    public void setStock(String stock) {
+        this.stock = stock;
+    }
+
+    public String getUnder_category() {
+        return under_category;
+    }
+
+    public void setUnder_category(String under_category) {
+        this.under_category = under_category;
+    }
+
+    @Override
+    public int compareTo(Products compareProduct) {
+        int compareSoldItem = ((Products)compareProduct).getSold_item();
+
+        return compareSoldItem-this.sold_item;
     }
 }

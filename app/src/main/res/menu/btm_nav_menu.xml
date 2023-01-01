@@ -7,9 +7,6 @@
     <item android:id="@+id/recommendation"
         android:title="Recommend"
         android:icon="@drawable/ic_recommend" />
-    <item android:id="@+id/notification"
-        android:title="Notification"
-        android:icon="@drawable/ic_notification" />
     <item android:id="@+id/order"
         android:title="Order"
         android:icon="@drawable/ic_order" />

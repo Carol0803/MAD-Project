@@ -58,10 +58,6 @@ public class OrderActivity extends AppCompatActivity {
                         startActivity(new Intent(getApplicationContext(), shop_recommendation.class));
                         overridePendingTransition(0,0);
                         return true;
-                    case R.id.notification:
-                        startActivity(new Intent(getApplicationContext(), shop_recommendation.class));
-                        overridePendingTransition(0,0);
-                        return true;
                     case R.id.order:
                         return true;
                     case R.id.profile:
@@ -99,12 +95,11 @@ public class OrderActivity extends AppCompatActivity {
                                                 Log.d(TAG, "DocumentSnapshot data: " + document.getData());
 
                                                 String name = document.get("product_name").toString();
-                                                String variation = document.get("variation_type").toString();
                                                 String quantity = document.get("quantity").toString();
                                                 String subtotal = document.get("subtotal").toString();
-                                                String img = document.get("variation_image").toString();
+                                                String img = document.get("image").toString();
 
-                                                orders.add(new Order(orderID, amount, shopName, name, variation, null, quantity, subtotal, img));
+                                                orders.add(new Order(orderID, null, amount, shopName, name, null, quantity, subtotal, img));
                                                 adapter.notifyItemInserted(orders.size());
                                             } else {
                                                 Log.d(TAG, "No such document");
@@ -123,7 +118,6 @@ public class OrderActivity extends AppCompatActivity {
                 });
 
         orders = new Vector<>();
-        //adapter = new OrderAdapter(getLayoutInflater(), orders, this);
         adapter = new OrderAdapter(getLayoutInflater(), orders);
 
         binding.recOrderList.setAdapter(adapter);
