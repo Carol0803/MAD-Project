@@ -206,7 +206,7 @@ public class CheckoutActivity extends AppCompatActivity {
 
         public void onDateSet(DatePicker view, int year, int month, int day) {
             // Do something with the date chosen by the user
-            binding.tvDTime.setText("Date: " + day + " " + Month.of(month) + ", " + year);
+            binding.tvDTime.setText("Date: " + day + " " + Month.of(month+1) + ", " + year);
             delivery_time = new Date(year-1900, month, day);
         }
     }

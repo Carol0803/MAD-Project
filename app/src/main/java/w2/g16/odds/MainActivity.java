@@ -2,6 +2,7 @@ package w2.g16.odds;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -12,9 +13,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.ImageView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -30,6 +35,7 @@ import w2.g16.odds.model.Category;
 import w2.g16.odds.model.Products;
 import w2.g16.odds.ordering.CartActivity;
 import w2.g16.odds.ordering.OrderActivity;
+import w2.g16.odds.product_browsing.SearchActivity;
 import w2.g16.odds.product_browsing.ViewCategoryActivity;
 import w2.g16.odds.product_browsing.ViewProductActivity;
 import w2.g16.odds.shop_recommendation.shop_recommendation;
@@ -53,6 +59,15 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        binding.searchBar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+
+                startActivity(new Intent(getApplicationContext(), SearchActivity.class));
+            }
+        });
 
         binding.btmNav.setSelectedItemId(com.google.android.material.R.id.home);
         binding.btmNav.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {

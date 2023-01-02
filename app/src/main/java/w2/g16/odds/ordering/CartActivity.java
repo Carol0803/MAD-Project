@@ -132,7 +132,7 @@ public class CartActivity extends AppCompatActivity {
 
 //        binding.recCart.setHasFixedSize(false);
         binding.recCart.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new CartAdapter();
+        adapter = new CartAdapter(this);
         binding.recCart.setAdapter(adapter);
 
         final String TAG = "Read Data Activity";

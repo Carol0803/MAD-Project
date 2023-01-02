@@ -157,11 +157,12 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
     public void setParentItemList(List<Shop> shops){
         this.shops = shops;
     }
-    /*public CartAdapter(Activity activity, Vector<Shop> shops, Vector<Cart> carts) {
+
+    public CartAdapter(){}
+
+    public CartAdapter(Activity activity) {
         this.activity = activity;
-        this.shops = shops;
-        this.carts = carts;
-    }*/
+    }
 
     @NonNull
     @Override

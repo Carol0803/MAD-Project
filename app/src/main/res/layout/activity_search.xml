@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".product_browsing.SearchActivity"
+    android:background="?attr/colorOnBackground">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="false">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="?attr/colorPrimary"
+                android:minHeight="?attr/actionBarSize"
+                android:theme="?attr/actionBarTheme"
+                app:title=" " />
+
+            <SearchView
+                android:id="@+id/searchView"
+                android:layout_width="870px"
+                android:layout_height="100px"
+                android:layout_marginStart="50dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/rounded_rectangle_bg"
+                android:backgroundTint="?attr/colorOnBackground"
+                android:iconifiedByDefault="false"
+                android:paddingVertical="5dp"
+                android:queryHint="Search"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/appbar"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginVertical="10dp">
+
+                <RadioGroup
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:id="@+id/rbByProduct"
+                        android:layout_width="wrap_content"
+                        android:layout_height="35dp"
+                        android:layout_margin="5dp"
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:button="@null"
+                        android:text="By Product"
+                        android:fontFamily="@font/belleza"
+                        android:textSize="15sp"
+                        android:textColor="@color/black"
+                        android:background="@drawable/rounded_rectangle_bg"
+                        android:onClick="onRadioButtonClicked"/>
+
+                    <RadioButton
+                        android:id="@+id/rbByShop"
+                        android:layout_width="wrap_content"
+                        android:layout_height="35dp"
+                        android:layout_margin="5dp"
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:button="@null"
+                        android:text="By Shop"
+                        android:fontFamily="@font/belleza"
+                        android:textSize="15sp"
+                        android:textColor="@color/black"
+                        android:background="@drawable/rounded_rectangle_bg"
+                        android:onClick="onRadioButtonClicked"/>
+
+                    <RadioButton
+                        android:id="@+id/rbByCategory"
+                        android:layout_width="wrap_content"
+                        android:layout_height="35dp"
+                        android:layout_margin="5dp"
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:button="@null"
+                        android:text="By Category"
+                        android:fontFamily="@font/belleza"
+                        android:textSize="15sp"
+                        android:textColor="@color/black"
+                        android:background="@drawable/rounded_rectangle_bg"
+                        android:onClick="onRadioButtonClicked"/>
+                </RadioGroup>
+
+                <!--<Button
+                    android:id="@+id/btnSortProduct"
+                    android:layout_width="wrap_content"
+                    android:layout_height="45dp"
+                    android:layout_marginHorizontal="5dp"
+                    android:layout_weight="1"
+                    android:backgroundTint="@color/white"
+                    android:fontFamily="@font/belleza"
+                    android:text="By Product"
+                    android:textAllCaps="false"
+                    android:textColor="@color/black" />
+
+                <Button
+                    android:id="@+id/btnSortShop"
+                    android:layout_width="wrap_content"
+                    android:layout_height="45dp"
+                    android:layout_marginHorizontal="5dp"
+                    android:layout_weight="1"
+                    android:backgroundTint="@color/white"
+                    android:fontFamily="@font/belleza"
+                    android:text="By Shop"
+                    android:textAllCaps="false"
+                    android:textColor="@color/black" />
+
+                <Button
+                    android:id="@+id/btnSortCat"
+                    android:layout_width="wrap_content"
+                    android:layout_height="45dp"
+                    android:layout_marginHorizontal="5dp"
+                    android:layout_weight="1"
+                    android:backgroundTint="@color/white"
+                    android:fontFamily="@font/belleza"
+                    android:text="By Category"
+                    android:textAllCaps="false"
+                    android:textColor="@color/black" />
+-->
+            </LinearLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recSearch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="10dp"
+                android:layout_marginHorizontal="5dp"/>
+
+            <ListView
+                android:id="@+id/listSearch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="10dp"
+                android:layout_marginHorizontal="5dp" />
+        </LinearLayout>
+
+
+    </ScrollView>
+
+</RelativeLayout>

@@ -12,11 +12,14 @@
         android:id="@+id/lytHeader"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="30dp"
+        android:layout_marginBottom="30dp"
         android:gravity="center"
-        android:layout_margin="30dp"
         android:orientation="vertical">
 
         <ImageView
@@ -26,16 +29,23 @@
             android:layout_weight="1"
             app:srcCompat="@drawable/ic_logo" />
 
-        <SearchView
+        <ImageView
+            android:id="@+id/searchBar"
+            android:layout_marginHorizontal="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            app:srcCompat="@drawable/ic_search_bar" />
+
+        <!--<SearchView
+            android:id="@+id/searchView"
             android:layout_width="match_parent"
             android:layout_height="37dp"
             android:layout_margin="5dp"
-            android:paddingVertical="5dp"
             android:background="@drawable/rounded_rectangle_bg"
             android:backgroundTint="?attr/colorOnBackground"
             android:iconifiedByDefault="false"
-            android:queryHint="Search" >
-        </SearchView>
+            android:onClick="fnGoSearch"
+            android:queryHint="Search" />-->
 
     </LinearLayout>
 
