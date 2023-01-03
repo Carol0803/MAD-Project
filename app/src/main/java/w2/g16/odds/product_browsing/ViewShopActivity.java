@@ -127,6 +127,31 @@ public class ViewShopActivity extends AppCompatActivity {
                                         .load(products.get(0).getImage())
                                         .into(binding.imgNo1);
                             }
+
+                            binding.imgNo1.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Intent intent = new Intent(getApplicationContext(), ViewProductActivity.class);
+                                    intent.putExtra("SKU", products.get(0).getSKU());
+                                    startActivity(intent);
+                                }
+                            });
+                            binding.imgNo2.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Intent intent = new Intent(getApplicationContext(), ViewProductActivity.class);
+                                    intent.putExtra("SKU", products.get(1).getSKU());
+                                    startActivity(intent);
+                                }
+                            });
+                            binding.imgNo3.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Intent intent = new Intent(getApplicationContext(), ViewProductActivity.class);
+                                    intent.putExtra("SKU", products.get(2).getSKU());
+                                    startActivity(intent);
+                                }
+                            });
                         } else {
                             Log.d(TAG, "Error getting documents: ", task.getException());
                         }
@@ -139,5 +164,6 @@ public class ViewShopActivity extends AppCompatActivity {
 
         binding.recProduct.setAdapter(adapterProduct);
         binding.recProduct.setLayoutManager(new GridLayoutManager(this, 2, RecyclerView.VERTICAL, false));
+
     }
 }

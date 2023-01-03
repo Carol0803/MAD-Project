@@ -7,47 +7,68 @@
     tools:context=".product_browsing.ViewCategoryActivity"
     android:background="?attr/colorOnBackground">
 
-        <com.google.android.material.appbar.AppBarLayout
-            android:id="@+id/appbar"
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@null"
+        android:translationZ="0.1dp"
+        app:elevation="0dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="false">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingVertical="10dp"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="false">
+            android:layout_height="?attr/actionBarSize"
+            android:background="@null"
+            app:title=" " />
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <LinearLayout
+        android:id="@+id/lytShopName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/appbar"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:background="?attr/colorPrimary">
+
+        <ImageView
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_gravity="center"
+            android:layout_marginVertical="10dp"
+            android:layout_marginLeft="50dp"
+            app:srcCompat="@drawable/ic_category"
+            android:background="@android:color/transparent"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/tvTitle"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:paddingLeft="5dp"
+                android:text="Category"
+                android:fontFamily="@font/league_gothic"
+                android:textColor="@color/white"
+                android:textFontWeight="1"
+                android:textSize="30sp"
+                android:textStyle="bold"/>
 
-                <androidx.appcompat.widget.Toolbar
-                    android:id="@+id/toolbar"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="?attr/colorPrimary"
-                    android:minHeight="?attr/actionBarSize"
-                    android:theme="?attr/actionBarTheme"
-                    app:title=" " />
+        </LinearLayout>
 
-                <TextView
-                    android:id="@+id/tvTitle"
-                    android:layout_width="300dp"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/league_gothic"
-                    android:paddingHorizontal="50dp"
-                    android:text="CATEGORY"
-                    android:textColor="@color/white"
-                    android:textSize="25sp"
-                    android:textStyle="bold"
-                    android:textFontWeight="1"
-                    app:layout_constraintBottom_toBottomOf="@id/toolbar"
-                    app:layout_constraintStart_toStartOf="@id/toolbar"
-                    app:layout_constraintTop_toTopOf="@id/toolbar" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-        </com.google.android.material.appbar.AppBarLayout>
+    </LinearLayout>
 
         <ScrollView
             android:layout_width="match_parent"
@@ -65,7 +86,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginVertical="10dp"
+                    android:layout_marginTop="10dp"
                     android:orientation="horizontal">
 
                     <Button
@@ -105,6 +126,120 @@
                         android:backgroundTint="@color/white" />
 
                 </LinearLayout>
+
+                <!--<Spinner
+                    android:id="@+id/spinner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginHorizontal="10dp"
+                    android:paddingRight="25dp"
+                    android:theme="@style/SpinnerTheme"
+                    android:background="@drawable/spinner_bg"
+                    android:fontFamily="@font/belleza"
+                    android:textColor="@color/black"/>-->
+
+
+                <RadioGroup
+                    android:id="@+id/lytPrice"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginHorizontal="10dp"
+                    android:layout_marginBottom="20dp"
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:id="@+id/rbHigh"
+                        android:layout_width="wrap_content"
+                        android:layout_height="25dp"
+                        android:layout_marginHorizontal="10dp"
+                        android:text="Highest to Lowest"
+                        android:fontFamily="@font/belleza"
+                        android:textColor="@color/black"/>
+
+                    <RadioButton
+                        android:id="@+id/rbLow"
+                        android:layout_width="wrap_content"
+                        android:layout_height="25dp"
+                        android:layout_marginHorizontal="10dp"
+                        android:text="Lowest to Highest"
+                        android:fontFamily="@font/belleza"
+                        android:textColor="@color/black"/>
+                </RadioGroup>
+
+                <RadioGroup
+                    android:id="@+id/lytRating"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginHorizontal="10dp"
+                    android:layout_marginBottom="20dp"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal">
+
+                            <RadioButton
+                                android:id="@+id/rb4"
+                                android:layout_width="wrap_content"
+                                android:layout_height="25dp"
+                                android:layout_marginHorizontal="10dp"
+                                android:fontFamily="@font/belleza"
+                                android:text="4 Star"
+                                android:textColor="@color/black" />
+
+                            <RadioButton
+                                android:id="@+id/rb5"
+                                android:layout_width="wrap_content"
+                                android:layout_height="25dp"
+                                android:layout_marginHorizontal="10dp"
+                                android:fontFamily="@font/belleza"
+                                android:text="5 Star"
+                                android:textColor="@color/black" />
+
+                            <RadioButton
+                                android:id="@+id/rb3"
+                                android:layout_width="wrap_content"
+                                android:layout_height="25dp"
+                                android:layout_marginHorizontal="10dp"
+                                android:fontFamily="@font/belleza"
+                                android:text="3 Star"
+                                android:textColor="@color/black" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal">
+
+                            <RadioButton
+                                android:id="@+id/rb2"
+                                android:layout_width="wrap_content"
+                                android:layout_height="25dp"
+                                android:layout_marginHorizontal="10dp"
+                                android:fontFamily="@font/belleza"
+                                android:text="2 Star"
+                                android:textColor="@color/black" />
+
+                            <RadioButton
+                                android:id="@+id/rb1"
+                                android:layout_width="wrap_content"
+                                android:layout_height="25dp"
+                                android:layout_marginHorizontal="10dp"
+                                android:fontFamily="@font/belleza"
+                                android:text="1 Star"
+                                android:textColor="@color/black" />
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </RadioGroup>
 
                 <RelativeLayout
                     android:layout_width="match_parent"

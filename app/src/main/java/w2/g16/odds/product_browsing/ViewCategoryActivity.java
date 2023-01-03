@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -56,6 +57,7 @@ public class ViewCategoryActivity extends AppCompatActivity {
         Intent intent = getIntent();
         categoryID = intent.getStringExtra("category_ID");
 
+
         DocumentReference docRef = db.collection("category").document(categoryID);
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -66,7 +68,7 @@ public class ViewCategoryActivity extends AppCompatActivity {
                         Log.d(TAG, "DocumentSnapshot data: " + document.getData());
 
                         category_name = document.get("category_name").toString();
-                        binding.tvTitle.setText("CATEGORY: " + category_name);
+                        binding.tvTitle.setText(category_name);
 
                     } else {
                         Log.d(TAG, "No such document");

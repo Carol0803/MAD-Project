@@ -45,7 +45,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </com.google.android.material.appbar.AppBarLayout>
@@ -56,11 +55,12 @@
         android:layout_below="@id/appbar"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true">
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentTop="false">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical" >
 
             <LinearLayout
@@ -70,7 +70,7 @@
 
                 <RadioGroup
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
                     <RadioButton
@@ -78,45 +78,45 @@
                         android:layout_width="wrap_content"
                         android:layout_height="35dp"
                         android:layout_margin="5dp"
-                        android:gravity="center"
                         android:layout_weight="1"
-                        android:button="@null"
-                        android:text="By Product"
-                        android:fontFamily="@font/belleza"
-                        android:textSize="15sp"
-                        android:textColor="@color/black"
                         android:background="@drawable/rounded_rectangle_bg"
-                        android:onClick="onRadioButtonClicked"/>
+                        android:button="@null"
+                        android:fontFamily="@font/belleza"
+                        android:gravity="center"
+                        android:onClick="onRadioButtonClicked"
+                        android:text="By Product"
+                        android:textColor="@color/black"
+                        android:textSize="15sp" />
 
                     <RadioButton
                         android:id="@+id/rbByShop"
                         android:layout_width="wrap_content"
                         android:layout_height="35dp"
                         android:layout_margin="5dp"
-                        android:gravity="center"
                         android:layout_weight="1"
-                        android:button="@null"
-                        android:text="By Shop"
-                        android:fontFamily="@font/belleza"
-                        android:textSize="15sp"
-                        android:textColor="@color/black"
                         android:background="@drawable/rounded_rectangle_bg"
-                        android:onClick="onRadioButtonClicked"/>
+                        android:button="@null"
+                        android:fontFamily="@font/belleza"
+                        android:gravity="center"
+                        android:onClick="onRadioButtonClicked"
+                        android:text="By Shop"
+                        android:textColor="@color/black"
+                        android:textSize="15sp" />
 
                     <RadioButton
                         android:id="@+id/rbByCategory"
                         android:layout_width="wrap_content"
                         android:layout_height="35dp"
                         android:layout_margin="5dp"
-                        android:gravity="center"
                         android:layout_weight="1"
-                        android:button="@null"
-                        android:text="By Category"
-                        android:fontFamily="@font/belleza"
-                        android:textSize="15sp"
-                        android:textColor="@color/black"
                         android:background="@drawable/rounded_rectangle_bg"
-                        android:onClick="onRadioButtonClicked"/>
+                        android:button="@null"
+                        android:fontFamily="@font/belleza"
+                        android:gravity="center"
+                        android:onClick="onRadioButtonClicked"
+                        android:text="By Category"
+                        android:textColor="@color/black"
+                        android:textSize="15sp" />
                 </RadioGroup>
 
                 <!--<Button
@@ -157,19 +157,26 @@
 -->
             </LinearLayout>
 
-            <androidx.recyclerview.widget.RecyclerView
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ListView
+                    android:id="@+id/listSearch"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginHorizontal="5dp"
+                    android:layout_marginVertical="10dp" />
+
+                <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recSearch"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginVertical="10dp"
-                android:layout_marginHorizontal="5dp"/>
+                android:layout_marginHorizontal="5dp"
+                android:visibility="gone"/>
 
-            <ListView
-                android:id="@+id/listSearch"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginVertical="10dp"
-                android:layout_marginHorizontal="5dp" />
+            </RelativeLayout>
         </LinearLayout>
 
 

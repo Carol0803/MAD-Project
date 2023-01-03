@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -30,6 +31,7 @@ import java.util.Map;
 import w2.g16.odds.R;
 import w2.g16.odds.databinding.ActivityViewProductBinding;
 import w2.g16.odds.model.Cart;
+import w2.g16.odds.ordering.CartActivity;
 
 public class ViewProductActivity extends AppCompatActivity {
 
@@ -61,6 +63,14 @@ public class ViewProductActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         SKU = intent.getStringExtra("SKU");
+
+        binding.btnGoCart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), CartActivity.class);
+                startActivity(intent);
+            }
+        });
 
         DocumentReference docRef = db.collection("products").document(SKU);
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
