@@ -85,10 +85,10 @@ public class SearchActivity extends AppCompatActivity {
                                 String SKU = document.getId();
                                 String product_name = document.get("product_name").toString();
                                 String product_description = document.get("product_description").toString();
-                                String product_rating = document.get("product_rating").toString();
+                                double product_rating = Double.parseDouble(document.get("product_rating").toString());
                                 String product_status = document.get("product_status").toString();
                                 String image = document.get("image").toString();
-                                String price = document.get("price").toString();
+                                double price = Double.parseDouble(document.get("price").toString());
                                 String owned_by = document.get("owned by").toString();
                                 int sold_item = Integer.parseInt(document.get("sold_item").toString());
                                 String stock = document.get("stock").toString();
@@ -283,10 +283,10 @@ public class SearchActivity extends AppCompatActivity {
                                             String SKU = document.getId();
                                             String product_name = document.get("product_name").toString();
                                             String product_description = document.get("product_description").toString();
-                                            String product_rating = document.get("product_rating").toString();
+                                            double product_rating = Double.parseDouble(document.get("product_rating").toString());
                                             String product_status = document.get("product_status").toString();
                                             String image = document.get("image").toString();
-                                            String price = document.get("price").toString();
+                                            double price = Double.parseDouble(document.get("price").toString());
                                             String owned_by = document.get("owned by").toString();
                                             int sold_item = Integer.parseInt(document.get("sold_item").toString());
                                             String stock = document.get("stock").toString();

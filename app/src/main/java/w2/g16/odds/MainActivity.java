@@ -139,7 +139,7 @@ public class MainActivity extends AppCompatActivity {
                                 String name = document.get("product_name").toString();
                                 String shopID = document.get("owned by").toString();
                                 String img = document.get("image").toString();
-                                String price = document.get("price").toString();
+                                double price = Double.parseDouble(document.get("price").toString());
                                 products.add(new Products(SKU, name, img, price, shopID));
                                 adapterProduct.notifyItemInserted(products.size());
                             }

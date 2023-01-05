@@ -154,6 +154,7 @@
                         android:layout_height="25dp"
                         android:layout_marginHorizontal="10dp"
                         android:text="Highest to Lowest"
+                        android:onClick="onRbPriceHighClicked"
                         android:fontFamily="@font/belleza"
                         android:textColor="@color/black"/>
 
@@ -163,6 +164,7 @@
                         android:layout_height="25dp"
                         android:layout_marginHorizontal="10dp"
                         android:text="Lowest to Highest"
+                        android:onClick="onRbPriceLowClicked"
                         android:fontFamily="@font/belleza"
                         android:textColor="@color/black"/>
                 </RadioGroup>
@@ -175,70 +177,25 @@
                     android:layout_marginBottom="20dp"
                     android:orientation="horizontal">
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
+                    <RadioButton
+                        android:id="@+id/rbRatingHigh"
+                        android:layout_width="wrap_content"
+                        android:layout_height="25dp"
+                        android:layout_marginHorizontal="10dp"
+                        android:text="Highest to Lowest"
+                        android:onClick="onRbRatingHighClicked"
+                        android:fontFamily="@font/belleza"
+                        android:textColor="@color/black"/>
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:orientation="horizontal">
-
-                            <RadioButton
-                                android:id="@+id/rb4"
-                                android:layout_width="wrap_content"
-                                android:layout_height="25dp"
-                                android:layout_marginHorizontal="10dp"
-                                android:fontFamily="@font/belleza"
-                                android:text="4 Star"
-                                android:textColor="@color/black" />
-
-                            <RadioButton
-                                android:id="@+id/rb5"
-                                android:layout_width="wrap_content"
-                                android:layout_height="25dp"
-                                android:layout_marginHorizontal="10dp"
-                                android:fontFamily="@font/belleza"
-                                android:text="5 Star"
-                                android:textColor="@color/black" />
-
-                            <RadioButton
-                                android:id="@+id/rb3"
-                                android:layout_width="wrap_content"
-                                android:layout_height="25dp"
-                                android:layout_marginHorizontal="10dp"
-                                android:fontFamily="@font/belleza"
-                                android:text="3 Star"
-                                android:textColor="@color/black" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:orientation="horizontal">
-
-                            <RadioButton
-                                android:id="@+id/rb2"
-                                android:layout_width="wrap_content"
-                                android:layout_height="25dp"
-                                android:layout_marginHorizontal="10dp"
-                                android:fontFamily="@font/belleza"
-                                android:text="2 Star"
-                                android:textColor="@color/black" />
-
-                            <RadioButton
-                                android:id="@+id/rb1"
-                                android:layout_width="wrap_content"
-                                android:layout_height="25dp"
-                                android:layout_marginHorizontal="10dp"
-                                android:fontFamily="@font/belleza"
-                                android:text="1 Star"
-                                android:textColor="@color/black" />
-                        </LinearLayout>
-
-                    </LinearLayout>
-
+                    <RadioButton
+                        android:id="@+id/rbRatingLow"
+                        android:layout_width="wrap_content"
+                        android:layout_height="25dp"
+                        android:layout_marginHorizontal="10dp"
+                        android:text="Lowest to Highest"
+                        android:onClick="onRbRatingLowClicked"
+                        android:fontFamily="@font/belleza"
+                        android:textColor="@color/black"/>
                 </RadioGroup>
 
                 <RelativeLayout

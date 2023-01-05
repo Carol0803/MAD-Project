@@ -1,5 +1,6 @@
 package w2.g16.odds.model;
 
+import java.util.Comparator;
 import java.util.Vector;
 
 public class Products implements Comparable<Products> {
@@ -7,16 +8,16 @@ public class Products implements Comparable<Products> {
     private String SKU;
     private String product_name;
     private String description;
-    private String rating;
+    private double rating;
     private String status;
     private String image;
-    private String price;
+    private double price;
     private String owned_by;
     private int sold_item;
     private String stock;
     private String under_category;
 
-    public Products(String SKU, String product_name, String description, String rating, String status, String image, String price, String owned_by, int sold_item, String stock, String under_category) {
+    public Products(String SKU, String product_name, String description, double rating, String status, String image, double price, String owned_by, int sold_item, String stock, String under_category) {
         this.SKU = SKU;
         this.product_name = product_name;
         this.description = description;
@@ -30,21 +31,22 @@ public class Products implements Comparable<Products> {
         this.under_category = under_category;
     }
 
-    public Products(String SKU, String product_name, String image, String price, String owned_by) {
-        this.SKU = SKU;
-        this.product_name = product_name;
-        this.image = image;
-        this.price = price;
-        this.owned_by = owned_by;
-    }
-
-    public Products(String SKU, String product_name, String image, String price, String owned_by, int sold_item) {
+    public Products(String SKU, String product_name, String image, double price, String owned_by, int sold_item, double rating) {
         this.SKU = SKU;
         this.product_name = product_name;
         this.image = image;
         this.price = price;
         this.owned_by = owned_by;
         this.sold_item = sold_item;
+        this.rating = rating;
+    }
+
+    public Products(String SKU, String product_name, String image, double price, String owned_by) {
+        this.SKU = SKU;
+        this.product_name = product_name;
+        this.image = image;
+        this.price = price;
+        this.owned_by = owned_by;
     }
 
     public String getSKU() {
@@ -71,11 +73,11 @@ public class Products implements Comparable<Products> {
         this.description = description;
     }
 
-    public String getRating() {
+    public double getRating() {
         return rating;
     }
 
-    public void setRating(String rating) {
+    public void setRating(double rating) {
         this.rating = rating;
     }
 
@@ -95,11 +97,11 @@ public class Products implements Comparable<Products> {
         this.image = image;
     }
 
-    public String getPrice() {
+    public double getPrice() {
         return price;
     }
 
-    public void setPrice(String price) {
+    public void setPrice(double price) {
         this.price = price;
     }
 
@@ -142,3 +144,4 @@ public class Products implements Comparable<Products> {
         return compareSoldItem-this.sold_item;
     }
 }
+
