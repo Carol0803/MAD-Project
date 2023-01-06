@@ -37,7 +37,7 @@ public class CheckoutActivity extends AppCompatActivity {
     private DatePickerDialog datePicker;
     private String delivery_method;
     private Address address;
-    private String selected_order_shopname;
+    private String selected_order_shopname, selected_order_shopID;
     private ArrayList<Order> orders;
     private static Date delivery_time;
     private String total;
@@ -76,6 +76,7 @@ public class CheckoutActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         selected_order_shopname = intent.getStringExtra("shopname");
+        selected_order_shopID = intent.getStringExtra("shopID");
         orders = (ArrayList<Order>) intent.getSerializableExtra("order");
         total = intent.getStringExtra("total");
 
@@ -91,6 +92,7 @@ public class CheckoutActivity extends AppCompatActivity {
         intent.putExtra("address", address);
         intent.putExtra("delivery_time", delivery_time);
         intent.putExtra("shopname", selected_order_shopname);
+        intent.putExtra("shopID", selected_order_shopID);
         intent.putExtra("order", orders);
         intent.putExtra("total", total);
         startActivity(intent);

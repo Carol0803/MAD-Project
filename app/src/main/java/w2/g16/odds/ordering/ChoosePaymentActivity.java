@@ -89,10 +89,6 @@ public class ChoosePaymentActivity extends AppCompatActivity {
 
         binding.rbCash.setChecked(true);
         payment_method = "Cash";
-
-        Intent intent = new Intent();
-        intent.putExtra("payment_method", payment_method);
-        setResult(RESULT_OK, intent);
     }
 
     public void onRadioButtonClicked(View view) {
@@ -108,13 +104,12 @@ public class ChoosePaymentActivity extends AppCompatActivity {
                     payment_method = "PayPal";
                 break;
         }
-
-        Intent intent = new Intent();
-        intent.putExtra("payment_method", payment_method);
-        setResult(RESULT_OK, intent);
     }
 
     public void fnNext(View view) {
+        Intent intent = new Intent();
+        intent.putExtra("payment_method", payment_method);
+        setResult(RESULT_OK, intent);
         finish();
     }
 }

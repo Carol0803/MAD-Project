@@ -271,14 +271,21 @@
                 android:layout_height="1dp"
                 android:background="#BFC5CC" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recProducts"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/white"
-                android:paddingHorizontal="30dp">
+                android:layout_height="match_parent">
 
-            </androidx.recyclerview.widget.RecyclerView>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recProducts"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/white"
+                    android:paddingHorizontal="30dp">
+
+                </androidx.recyclerview.widget.RecyclerView>
+            </RelativeLayout>
+
+
 
             <LinearLayout
                 android:layout_width="match_parent"

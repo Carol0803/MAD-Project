@@ -186,11 +186,6 @@
                 android:background="#BFC5CC" />
 
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"></LinearLayout>
-
-            <LinearLayout
                 android:id="@+id/lytDeliveryDetails"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -359,7 +354,7 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="match_parent">
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recItems"
@@ -389,7 +384,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/belleza"
-                        android:text="Total Amount: RM"
+                        android:text="Total Amount:     RM"
                         android:textColor="@color/black"
                         android:textSize="16sp"
                         android:textStyle="bold" />
@@ -399,10 +394,11 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/belleza"
-                        android:paddingStart="10dp"
+                        android:paddingStart="5dp"
                         android:text="total amount"
                         android:textColor="@color/black"
-                        android:textSize="16sp" />
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
 
                 </TableRow>
 

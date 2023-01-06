@@ -37,18 +37,15 @@ public class CartActivity extends AppCompatActivity {
     private ActivityCartBinding binding;
     ArrayList<Shop> shop_list;
     List<Shop> shops;
-//    Shop shop;
     private CartAdapter adapter;
     private Vector<Shop> shop_lists;
-    private String selected_order_shopname;
+    private String selected_order_shopname, selected_order_shopID;
     private ArrayList<Order> orders;
     private String total;
     private String deliver_by = null, SKU = null, name = null, variationID = null,
             variation_name = null, price = null, quantity = null, img = null;
 
     FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-    private int cart_item_count;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -227,6 +224,7 @@ public class CartActivity extends AppCompatActivity {
     public void fnCheckout(View view) {
         Intent intent = new Intent(this, CheckoutActivity.class);
         intent.putExtra("shopname", selected_order_shopname);
+        intent.putExtra("shopID", selected_order_shopID);
         intent.putExtra("order", orders);
         intent.putExtra("total", total);
         startActivity(intent);
@@ -237,6 +235,7 @@ public class CartActivity extends AppCompatActivity {
         public void onReceive(Context context, Intent intent) {
             total = intent.getStringExtra("total");
             selected_order_shopname = intent.getStringExtra("shopname");
+            selected_order_shopID = intent.getStringExtra("shopID");
             orders = (ArrayList<Order>) intent.getSerializableExtra("order");
             binding.tvTotalAmount.setText("RM: " + total);
         }

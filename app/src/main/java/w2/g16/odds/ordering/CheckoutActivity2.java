@@ -49,12 +49,12 @@ public class CheckoutActivity2 extends AppCompatActivity {
     private String payment_method;
     private Date deliveryTime;
     private Timestamp delivery_time;
-    private String shopname;
+    private String shopname, shopID;
     private ArrayList<Order> order_lists;
     private Checkout2Adapter adapter;
     private String total;
 
-    static String accessToken = "A21AAJMcX_wmPcEDpHtNEZBo3lsDRPAy1Vz7bTHLBAoJMz1QKyazE9CVlRTIxlpLt0zNpLYSKctJQvM86IT6smh7U5ELtQ2zA";
+    static String accessToken = "A21AALGZG0Nsc2ntiQ4SQPXsN6PwfJPEN_5L0V-qWby7P79sWYd6M46DLs2cabXbHCWSx5Rbndx-XcSHymlv2a-9TNb-pws9w";
     private String amount;
 
     @Override
@@ -78,8 +78,8 @@ public class CheckoutActivity2 extends AppCompatActivity {
         delivery_method = intent.getStringExtra("delivery_method");
         address = (Address) intent.getSerializableExtra("address");
         deliveryTime = (Date) intent.getSerializableExtra("delivery_time");
-        delivery_time = new Timestamp(deliveryTime);
         shopname = intent.getStringExtra("shopname");
+        shopID = intent.getStringExtra("shopID");
         order_lists = (ArrayList<Order>) intent.getSerializableExtra("order");
         adapter = new Checkout2Adapter(getLayoutInflater(), order_lists);
 
@@ -116,21 +116,6 @@ public class CheckoutActivity2 extends AppCompatActivity {
         total = intent.getStringExtra("total");
         binding.tvTotalAmount.setText("RM: " + total);
         amount = total;
-
-        Gson gson = new Gson();
-        String json_address = gson.toJson(address);
-        String json_order_lists = gson.toJson(order_lists);
-        String json_deliveryTime = gson.toJson(deliveryTime);
-
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putString("delivery_method", delivery_method);
-        editor.putString("address", json_address);
-        editor.putString("delivery_time", json_deliveryTime);
-        editor.putString("shopname", shopname);
-        editor.putString("order", json_order_lists);
-        editor.putString("total", total);
-        editor.commit();
     }
 
     public void fnGoChoosePayment(View view) {
@@ -147,6 +132,23 @@ public class CheckoutActivity2 extends AppCompatActivity {
             {
                 payment_method = data.getStringExtra("payment_method");
                 binding.tvPaymentMethod.setText(payment_method);
+
+                Gson gson = new Gson();
+                String json_address = gson.toJson(address);
+                String json_order_lists = gson.toJson(order_lists);
+                String json_deliveryTime = gson.toJson(deliveryTime);
+
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+                SharedPreferences.Editor editor = prefs.edit();
+                editor.putString("delivery_method", delivery_method);
+                editor.putString("payment_method", payment_method);
+                editor.putString("address", json_address);
+                editor.putString("delivery_time", json_deliveryTime);
+                editor.putString("shopname", shopname);
+                editor.putString("shopID", shopID);
+                editor.putString("order", json_order_lists);
+                editor.putString("total", total);
+                editor.commit();
             }
         }
     }

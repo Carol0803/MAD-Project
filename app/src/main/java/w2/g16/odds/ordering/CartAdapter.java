@@ -144,7 +144,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
     private Activity activity;
 //    private final List<Shop> shops;
 //    private final Vector<Cart> carts;
-    private String selected_shopname;
+    private String selected_shopname, selected_shopID;
     private ArrayList<Order> orders;
     private int selectedPosition = -1;
 
@@ -194,6 +194,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
             holder.checkBox.setChecked(true);
 
             selected_shopname = shop.getShopname();
+            selected_shopID = shop.getShopID();
             db.collection("customer/username/cart/" + shop.getShopID() + "/cart_product")
                     .get()
                     .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -207,19 +208,22 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
                                 for (QueryDocumentSnapshot document : task.getResult()) {
                                     Log.d(TAG, document.getId() + " => " + document.getData());
 
+                                    String SKU = document.getId();
                                     String name = document.get("product_name").toString();
                                     String price = document.get("product_price").toString();
                                     String quantity = document.get("quantity").toString();
                                     String image = document.get("product_image").toString();
 
                                     subtotal = Double.parseDouble(price) * Double.parseDouble(quantity);
+                                    orders.add(new Order(SKU, name, price, quantity, subtotal.toString(), image));
+
                                     total += subtotal;
 
-                                    orders.add(new Order(name, price, quantity, image));
                                 }
                                 Intent intent = new Intent("return_total");
                                 intent.putExtra("total",""+df.format(total));
                                 intent.putExtra("shopname", selected_shopname);
+                                intent.putExtra("shopID", selected_shopID);
                                 intent.putExtra("order", orders);
                                 LocalBroadcastManager.getInstance(activity.getApplicationContext()).sendBroadcast(intent);
                             } else {
