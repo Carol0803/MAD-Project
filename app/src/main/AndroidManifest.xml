@@ -13,14 +13,22 @@
         android:theme="@style/Theme.ODDS"
         tools:targetApi="31">
         <activity
+            android:name=".ordering.OrderCompletedPopUp"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
             android:name=".product_browsing.SearchActivity"
             android:exported="false">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
-            <meta-data android:name="android.app.searchable"
-                android:resource="@xml/searchable"/>
 
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
         </activity>
         <activity
             android:name=".product_browsing.ViewCategoryActivity"

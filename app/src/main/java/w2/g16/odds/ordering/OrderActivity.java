@@ -2,9 +2,13 @@ package w2.g16.odds.ordering;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -25,6 +29,7 @@ import w2.g16.odds.MainActivity;
 import w2.g16.odds.R;
 import w2.g16.odds.databinding.ActivityOrderBinding;
 import w2.g16.odds.model.Order;
+import w2.g16.odds.product_browsing.ViewProductActivity;
 import w2.g16.odds.shop_recommendation.shop_recommendation;
 
 public class OrderActivity extends AppCompatActivity {
@@ -34,7 +39,6 @@ public class OrderActivity extends AppCompatActivity {
     private Order order;
     private Vector<Order> orders;
     private OrderAdapter adapter;
-    private String orderID;
 
     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -80,9 +84,11 @@ public class OrderActivity extends AppCompatActivity {
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 Log.d(TAG, document.getId() + " => " + document.getData());
 
-                                orderID = document.getId();
+                                String orderID = document.getId();
                                 String amount = document.get("order_amount").toString();
-                                String shopName = document.get("order_from").toString();
+                                String shopID = document.get("order_from").toString();
+                                String shopName = document.get("shop_name").toString();
+                                String order_status = document.get("order_status").toString();
 
                                 DocumentReference docRef = db.collection("order").document(orderID)
                                         .collection("ordered_product").document("001");
@@ -96,10 +102,10 @@ public class OrderActivity extends AppCompatActivity {
 
                                                 String name = document.get("product_name").toString();
                                                 String quantity = document.get("quantity").toString();
-                                                String subtotal = document.get("subtotal").toString();
+                                                String price = document.get("price").toString();
                                                 String img = document.get("image").toString();
 
-                                                orders.add(new Order(orderID, amount, shopName, name, quantity, subtotal, img));
+                                                orders.add(new Order(orderID, amount, shopName, name, quantity, price, img, order_status));
                                                 adapter.notifyItemInserted(orders.size());
                                             } else {
                                                 Log.d(TAG, "No such document");
@@ -109,7 +115,29 @@ public class OrderActivity extends AppCompatActivity {
                                         }
                                     }
                                 });
+                                orders = new Vector<>();
+                                adapter = new OrderAdapter(getParent(), getApplicationContext(), getLayoutInflater(), orders);
+                  /*                      new OrderAdapter.OrderAdapterListener() {
+                                    @Override
+                                    public void tvMore(View v, int position) {
+                                        Log.d(TAG, "tvMore at position "+position);
+                                        Order order = orders.get(position);
+                                        String orderID = order.getOrderID();
 
+                                        Intent intent = new Intent(OrderActivity.this, ViewOrderActivity.class);
+                                        intent.putExtra("orderID", orderID);
+                                        startActivity(intent);
+                                    }
+
+                                    @Override
+                                    public void btnView(View v, int position) {
+                                        Log.d(TAG, "btnView at position "+position);
+
+                                    }
+                                });*/
+
+                                binding.recOrderList.setAdapter(adapter);
+                                binding.recOrderList.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
                             }
                         } else {
                             Log.d(TAG, "Error getting documents: ", task.getException());
@@ -117,18 +145,5 @@ public class OrderActivity extends AppCompatActivity {
                     }
                 });
 
-        orders = new Vector<>();
-        adapter = new OrderAdapter(getLayoutInflater(), orders);
-
-        binding.recOrderList.setAdapter(adapter);
-        binding.recOrderList.setLayoutManager(new LinearLayoutManager(this));
-
     }
-
-    public void fnViewOrder(View view) {
-        Intent intent = new Intent(this, ViewOrderActivity.class);
-        intent.putExtra("orderID", orderID);
-        startActivity(intent);
-    }
-
 }

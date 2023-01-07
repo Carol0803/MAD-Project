@@ -35,7 +35,10 @@ public class Checkout2Adapter extends RecyclerView.Adapter<Checkout2ViewHolder> 
 
     @Override
     public int getItemCount() {
-        return orders.size();
+        if(orders == null)
+            return 0;
+        else
+            return orders.size();
     }
 
 }

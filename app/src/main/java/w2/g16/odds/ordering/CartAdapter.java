@@ -215,7 +215,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
                                     String image = document.get("product_image").toString();
 
                                     subtotal = Double.parseDouble(price) * Double.parseDouble(quantity);
-                                    orders.add(new Order(SKU, name, price, quantity, subtotal.toString(), image));
+                                    orders.add(new Order(SKU, name, price, quantity, image));
 
                                     total += subtotal;
 

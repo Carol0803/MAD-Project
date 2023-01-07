@@ -3,11 +3,13 @@ package w2.g16.odds.ordering;
 import static android.content.ContentValues.TAG;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -24,6 +26,7 @@ import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -47,6 +50,7 @@ public class OrderPlacedActivity extends AppCompatActivity {
 
     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,10 +62,15 @@ public class OrderPlacedActivity extends AppCompatActivity {
         String data = prefs.getString("string_id", "no id"); //no id: default value
         String delivery_method = prefs.getString("delivery_method", "");
         String payment_method = prefs.getString("payment_method", "");
-        if(payment_method.equals("Cash"))
+        if(payment_method.equals("Cash")) {
             order_status = "UNPAID";
-        else if(payment_method.equals("PayPal"))
+            binding.icOrderStatus.setImageResource(R.drawable.ic_order_status_unpaid);
+        }
+        else if(payment_method.equals("PayPal")) {
             order_status = "TO-PACK";
+            binding.icOrderStatus.setImageResource(R.drawable.ic_order_status_pack);
+
+        }
         String json_address = prefs.getString("address", "");
         address = gson.fromJson(json_address, Address.class);
         String json_delivery_time = prefs.getString("delivery_time", "");
@@ -80,8 +89,10 @@ public class OrderPlacedActivity extends AppCompatActivity {
         delivery_time = new Timestamp(deliveryTime);
         shopname = intent.getStringExtra("shopname");
         total = intent.getStringExtra("total");*/
-
+        SimpleDateFormat formatter = new SimpleDateFormat("dd MMMM yyyy");
+        binding.tvDeliveryTimeDate.setText(formatter.format(deliveryTime));
         binding.tvShopName.setText(shopname);
+        binding.tvOrderDate.setText(formatter.format(new Date()));
         binding.tvDeliveryMethod.setText(delivery_method);
         binding.tvRecipientName.setText(address.getReceiver_name());
         binding.tvTel.setText(address.getReceiver_tel());
@@ -91,12 +102,9 @@ public class OrderPlacedActivity extends AppCompatActivity {
         binding.tvPostcode.setText(address.getPostcode());
         binding.tvState.setText(address.getState());
 
-        SimpleDateFormat formatter = new SimpleDateFormat("dd MMMM yyyy");
-        binding.tvDeliveryTimeDate.setText(formatter.format(deliveryTime));
-
 //        order_lists = (ArrayList<Order>) intent.getSerializableExtra("order");
         adapter = new Checkout2Adapter(getLayoutInflater(), order_lists);
-        binding.recItems.setNestedScrollingEnabled(false);
+//        binding.recItems.setNestedScrollingEnabled(false);
         binding.recItems.setLayoutManager(new LinearLayoutManager(this));
         binding.recItems.setAdapter(adapter);
 
@@ -105,11 +113,12 @@ public class OrderPlacedActivity extends AppCompatActivity {
         // add order to database
         Map<String, Object> order = new HashMap<>();
         order.put("delivery_method", delivery_method);
-//        order.put("delivery_time", delivery_time);
+        order.put("delivery_time", new Timestamp(deliveryTime));
         order.put("order_amount", total);
         order.put("order_by", "");
-        order.put("order_date", new Timestamp(deliveryTime));
+        order.put("order_date", new Timestamp(new Date()));
         order.put("order_from", shopID);
+        order.put("shop_name", shopname);
         order.put("order_status", order_status);
         order.put("payment_method", payment_method);
 //        order.put("addr1", address.getAddr1());
@@ -128,6 +137,7 @@ public class OrderPlacedActivity extends AppCompatActivity {
                     public void onSuccess(DocumentReference documentReference) {
                         Log.d(TAG, "DocumentSnapshot written with ID: " + documentReference.getId());
                         orderID = documentReference.getId();
+                        binding.tvOrderID.setText(orderID);
 
                         db.collection("order").document(orderID)
                                 .collection("address").document("001").set(address);
@@ -141,7 +151,7 @@ public class OrderPlacedActivity extends AppCompatActivity {
                             ordered_product.put("image", order.getProduct_img());
                             ordered_product.put("product_name", order.getProduct_name());
                             ordered_product.put("quantity", order.getQuantity());
-                            ordered_product.put("subtotal", order.getSubtotal());
+                            ordered_product.put("price", order.getProduct_price());
 
                             db.collection("order").document(orderID)
                                     .collection("ordered_product").document(ordered_product_ID)
