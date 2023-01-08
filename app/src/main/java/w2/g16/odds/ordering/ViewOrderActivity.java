@@ -109,7 +109,6 @@ public class ViewOrderActivity extends AppCompatActivity {
                         if(order_status.equals("TO-DELIVER")) {
                             binding.icOrderStatus.setImageResource(R.drawable.ic_order_status_deliver);
                             binding.btnOrderReceived.setEnabled(true);
-
                             binding.btnOrderReceived.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
@@ -128,38 +127,45 @@ public class ViewOrderActivity extends AppCompatActivity {
                             binding.icOrderStatus.setImageResource(R.drawable.ic_order_status_completed);
                         if(order_status.equals("CANCELLED"))
                             binding.icOrderStatus.setImageResource(R.drawable.ic_order_status_cancel);
-                        binding.tvDeliveryMethod.setText(document.get("delivery_method").toString());
+                        String shopID = document.get("order_from").toString();
+                        String delivery_method = document.get("delivery_method").toString();
+                        binding.tvDeliveryMethod.setText(delivery_method);
+                        if(delivery_method.equals("Home Delivery")){
+                            DocumentReference docRef2 = db.collection("order").document(orderID)
+                                    .collection("address").document("001");
+                            docRef2.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                    if (task.isSuccessful()) {
+                                        DocumentSnapshot document = task.getResult();
+                                        if (document.exists()) {
+                                            Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+
+                                            binding.tvRecipientName.setText(document.get("receiver_name").toString());
+                                            binding.tvTel.setText(document.get("receiver_tel").toString());
+                                            binding.tvAddr1.setText(document.get("addr1").toString());
+                                            binding.tvAddr2.setText(document.get("addr2").toString());
+                                            binding.tvCity.setText(document.get("city").toString());
+                                            binding.tvPostcode.setText(document.get("postcode").toString());
+                                            binding.tvState.setText(document.get("state").toString());
+                                        } else {
+                                            Log.d(TAG, "No such document");
+                                        }
+                                    } else {
+                                        Log.d(TAG, "get failed with ", task.getException());
+                                    }
+                                }
+                            });
+                        }
+                        if(delivery_method.equals("Self Collection")){
+                            binding.tvAddress.setText("Pick Up Address");
+                            dbGetShopAddress(shopID);
+                        }
                         Timestamp timestamp2 = (Timestamp) document.get("order_date");
                         Date delivery_time = timestamp2.toDate();
                         binding.tvDeliveryTimeDate.setText(formatter.format(delivery_time));
                         binding.tvTotal.setText(document.get("order_amount").toString());
 
-                    } else {
-                        Log.d(TAG, "No such document");
-                    }
-                } else {
-                    Log.d(TAG, "get failed with ", task.getException());
-                }
-            }
-        });
-
-        DocumentReference docRef2 = db.collection("order").document(orderID)
-                .collection("address").document("001");
-        docRef2.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        Log.d(TAG, "DocumentSnapshot data: " + document.getData());
-
-                        binding.tvRecipientName.setText(document.get("receiver_name").toString());
-                        binding.tvTel.setText(document.get("receiver_tel").toString());
-                        binding.tvAddr1.setText(document.get("addr1").toString());
-                        binding.tvAddr2.setText(document.get("addr2").toString());
-                        binding.tvCity.setText(document.get("city").toString());
-                        binding.tvPostcode.setText(document.get("postcode").toString());
-                        binding.tvState.setText(document.get("state").toString());
                     } else {
                         Log.d(TAG, "No such document");
                     }
@@ -198,5 +204,33 @@ public class ViewOrderActivity extends AppCompatActivity {
         adapter = new Checkout2Adapter(getLayoutInflater(), ordered_product);
         binding.recItems.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         binding.recItems.setAdapter(adapter);
+    }
+
+    public void dbGetShopAddress(String shopID){
+        DocumentReference docRef = db.collection("shop").document(shopID);
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+
+                        binding.tvRecipientName.setText(document.get("shop_name").toString());
+                        binding.tvTel.setText(document.get("shop_tel").toString());
+                        binding.tvAddr1.setText(document.get("shop_addr1").toString());
+                        binding.tvAddr2.setText(document.get("shop_addr2").toString());
+                        binding.tvCity.setText(document.get("shop_city").toString());
+                        binding.tvPostcode.setText(document.get("shop_postcode").toString());
+                        binding.tvState.setText(document.get("shop_state").toString());
+
+                    } else {
+                        Log.d(TAG, "No such document");
+                    }
+                } else {
+                    Log.d(TAG, "get failed with ", task.getException());
+                }
+            }
+        });
     }
 }

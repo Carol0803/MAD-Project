@@ -1,5 +1,8 @@
 package w2.g16.odds.ordering;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +13,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -150,6 +154,7 @@ public class CartChildAdapter extends RecyclerView.Adapter<CartChildAdapter.Cart
     private ArrayList<Integer> selectCheck;
     private int selectedPosition = 0;
     private int current_quantity;
+//    private Context context;
 
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     final String TAG = "Read Data Activity";
@@ -160,9 +165,9 @@ public class CartChildAdapter extends RecyclerView.Adapter<CartChildAdapter.Cart
 //        this.carts.removeAll(Collections.singleton(null));
     }
 
-//    public CartChildAdapter(Vector<Cart> carts) {
-//        this.carts = carts;
-//    }
+   /* public CartChildAdapter(Context context) {
+        this.context = context;
+    }*/
 
     @NonNull
     @Override
@@ -190,6 +195,35 @@ public class CartChildAdapter extends RecyclerView.Adapter<CartChildAdapter.Cart
                 current_quantity += 1;
                 holder.quantity.setText("" + current_quantity);
 
+                /*if(current_quantity == 0){
+                    DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            switch (which) {
+                                case DialogInterface.BUTTON_POSITIVE:
+                                    // Yes button clicked
+                                    // delete from db
+                                    Toast.makeText(context, "Yes Clicked",
+                                            Toast.LENGTH_LONG).show();
+                                    break;
+
+                                case DialogInterface.BUTTON_NEGATIVE:
+                                    // No button clicked
+                                    holder.quantity.setText("1");
+
+                                    break;
+                            }
+                        }
+                    };
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                    builder.setMessage("Are you sure?")
+                            .setPositiveButton("Yes", dialogClickListener)
+                            .setNegativeButton("No", dialogClickListener).show();
+                }
+                else{
+                    holder.quantity.setText("" + current_quantity);
+                }*/
+
                 DocumentReference addQuantity = db.collection("customer").document("username")
                         .collection("cart").document(cart.getShopID())
                         .collection("cart_product").document(cart.getSKU());
@@ -214,6 +248,29 @@ public class CartChildAdapter extends RecyclerView.Adapter<CartChildAdapter.Cart
             public void onClick(View v) {
                 current_quantity -= 1;
                 holder.quantity.setText("" + current_quantity);
+
+                /*if(current_quantity == 0) {
+                    DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            switch (which) {
+                                case DialogInterface.BUTTON_POSITIVE:
+                                    // Yes button clicked
+                                    // delete from db
+                                    Toast.makeText(context, "Yes Clicked",
+                                            Toast.LENGTH_LONG).show();
+                                    break;
+
+                                case DialogInterface.BUTTON_NEGATIVE:
+                                    // No button clicked
+                                    holder.quantity.setText("1");
+
+                                    break;
+                            }
+                        }
+                    };
+                }
+                else
+                    holder.quantity.setText("" + current_quantity);*/
 
                 DocumentReference addQuantity = db.collection("customer").document("username")
                         .collection("cart").document(cart.getShopID())

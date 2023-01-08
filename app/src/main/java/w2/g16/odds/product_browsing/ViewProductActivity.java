@@ -22,6 +22,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.SetOptions;
 import com.squareup.picasso.Picasso;
 
 import java.text.DecimalFormat;
@@ -234,8 +235,34 @@ public class ViewProductActivity extends AppCompatActivity {
                     if (document.exists()) {
                         Log.d(TAG, "DocumentSnapshot data: " + document.getData());
 
-                        Toast toast=Toast.makeText(getApplicationContext(),"This item is already in cart.",Toast.LENGTH_SHORT);
-                        toast.show();
+//                        Toast toast=Toast.makeText(getApplicationContext(),"This item is already in cart.",Toast.LENGTH_SHORT);
+//                        toast.show();
+
+                        int quantity = Integer.parseInt(document.get("quantity").toString());
+                        quantity += currentQuantity;
+
+                        Map<String, Object> data = new HashMap<>();
+                        data.put("quantity", quantity);
+
+                        db.collection("customer").document("username")
+                                .collection("cart").document(shopID)
+                                .collection("cart_product").document(SKU)
+                                .set(data, SetOptions.merge())
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        Log.d(TAG, "DocumentSnapshot successfully written!");
+
+                                        Toast toast=Toast.makeText(getApplicationContext(),"Added to cart.",Toast.LENGTH_SHORT);
+                                        toast.show();
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Log.w(TAG, "Error writing document", e);
+                                    }
+                                });
 
                     } else {
                         Log.d(TAG, "No such document");

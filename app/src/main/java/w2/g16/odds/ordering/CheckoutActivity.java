@@ -1,5 +1,7 @@
 package w2.g16.odds.ordering;
 
+import static android.content.ContentValues.TAG;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -13,10 +15,13 @@ import android.util.Log;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.RadioButton;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -87,15 +92,21 @@ public class CheckoutActivity extends AppCompatActivity {
     }
 
     public void fnNext(View view) {
-        Intent intent = new Intent(this, CheckoutActivity2.class);
-        intent.putExtra("delivery_method", delivery_method);
-        intent.putExtra("address", address);
-        intent.putExtra("delivery_time", delivery_time);
-        intent.putExtra("shopname", selected_order_shopname);
-        intent.putExtra("shopID", selected_order_shopID);
-        intent.putExtra("order", orders);
-        intent.putExtra("total", total);
-        startActivity(intent);
+        if(delivery_time == null) {
+            Toast.makeText(this,"Please choose delivery time.",Toast.LENGTH_SHORT).show();
+            binding.btnNext.setEnabled(false);
+        }
+        else{
+            Intent intent = new Intent(this, CheckoutActivity2.class);
+            intent.putExtra("delivery_method", delivery_method);
+            intent.putExtra("address", address);
+            intent.putExtra("delivery_time", delivery_time);
+            intent.putExtra("shopname", selected_order_shopname);
+            intent.putExtra("shopID", selected_order_shopID);
+            intent.putExtra("order", orders);
+            intent.putExtra("total", total);
+            startActivity(intent);
+        }
     }
 
     public void onRadioButtonClicked(View view) {
@@ -107,12 +118,18 @@ public class CheckoutActivity extends AppCompatActivity {
                     binding.rbDelivery.setBackgroundResource(R.drawable.ic_delivery_checked);
                     binding.rbSelfCollection.setBackgroundResource(R.drawable.ic_self_collection);
                     delivery_method = "Home Delivery";
+                    binding.tvTitleAddr.setText("Delivery Address");
+                    binding.tvChangeAddress.setVisibility(View.VISIBLE);
+                    dbGetDefaultAddress();
                 break;
             case R.id.rbSelfCollection:
                 if (checked)
                     binding.rbSelfCollection.setBackgroundResource(R.drawable.ic_self_collection_checked);
                     binding.rbDelivery.setBackgroundResource(R.drawable.ic_delivery);
                     delivery_method = "Self Collection";
+                    binding.tvTitleAddr.setText("Pick Up Address");
+                    binding.tvChangeAddress.setVisibility(View.INVISIBLE);
+                    dbGetShopAddress();
                 break;
         }
     }
@@ -188,6 +205,34 @@ public class CheckoutActivity extends AppCompatActivity {
                 });
     }
 
+    public void dbGetShopAddress(){
+        DocumentReference docRef = db.collection("shop").document(selected_order_shopID);
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+
+                        binding.tvRecipientName.setText(document.get("shop_name").toString());
+                        binding.tvTel.setText(document.get("shop_tel").toString());
+                        binding.tvAddr1.setText(document.get("shop_addr1").toString());
+                        binding.tvAddr2.setText(document.get("shop_addr2").toString());
+                        binding.tvCity.setText(document.get("shop_city").toString());
+                        binding.tvPostcode.setText(document.get("shop_postcode").toString());
+                        binding.tvState.setText(document.get("shop_state").toString());
+
+                    } else {
+                        Log.d(TAG, "No such document");
+                    }
+                } else {
+                    Log.d(TAG, "get failed with ", task.getException());
+                }
+            }
+        });
+    }
+
     public static class DatePickerFragment extends DialogFragment
             implements DatePickerDialog.OnDateSetListener {
 
@@ -210,6 +255,7 @@ public class CheckoutActivity extends AppCompatActivity {
             // Do something with the date chosen by the user
             binding.tvDTime.setText("Date: " + day + " " + Month.of(month+1) + ", " + year);
             delivery_time = new Date(year-1900, month, day);
+            binding.btnNext.setEnabled(true);
         }
     }
 

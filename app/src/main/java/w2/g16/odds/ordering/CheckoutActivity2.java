@@ -1,5 +1,8 @@
 package w2.g16.odds.ordering;
 
+import static android.content.ContentValues.TAG;
+
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
@@ -7,17 +10,28 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.browser.customtabs.CustomTabsIntent;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.gson.Gson;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.TextHttpResponseHandler;
@@ -26,11 +40,20 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Date;
 import java.util.Objects;
 import java.util.Vector;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.HttpEntity;
@@ -53,9 +76,10 @@ public class CheckoutActivity2 extends AppCompatActivity {
     private ArrayList<Order> order_lists;
     private Checkout2Adapter adapter;
     private String total;
-
-    static String accessToken = "A21AALGZG0Nsc2ntiQ4SQPXsN6PwfJPEN_5L0V-qWby7P79sWYd6M46DLs2cabXbHCWSx5Rbndx-XcSHymlv2a-9TNb-pws9w";
+    static String accessToken;
     private String amount;
+
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,7 +94,7 @@ public class CheckoutActivity2 extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), CheckoutActivity.class));
+                onBackPressed();
             }
         });
 
@@ -86,13 +110,21 @@ public class CheckoutActivity2 extends AppCompatActivity {
         binding.recProducts.setLayoutManager(new LinearLayoutManager(this));
         binding.recProducts.setAdapter(adapter);
 
-        binding.tvRecipientName.setText(address.getReceiver_name());
-        binding.tvTel.setText(address.getReceiver_tel());
-        binding.tvAddr1.setText(address.getAddr1());
-        binding.tvAddr2.setText(address.getAddr2());
-        binding.tvCity.setText(address.getCity());
-        binding.tvPostcode.setText(address.getPostcode());
-        binding.tvState.setText(address.getState());
+        if(delivery_method.equals("Home Delivery")) {
+            binding.tvRecipientName.setText(address.getReceiver_name());
+            binding.tvTel.setText(address.getReceiver_tel());
+            binding.tvAddr1.setText(address.getAddr1());
+            binding.tvAddr2.setText(address.getAddr2());
+            binding.tvCity.setText(address.getCity());
+            binding.tvPostcode.setText(address.getPostcode());
+            binding.tvState.setText(address.getState());
+        }
+
+        if(delivery_method.equals("Self Collection")){
+            binding.tvAddress.setText("Pick Up Address");
+            binding.tvEditAddress.setVisibility(View.INVISIBLE);
+            dbGetShopAddress();
+        }
 
         binding.tvEditAddress.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -116,6 +148,37 @@ public class CheckoutActivity2 extends AppCompatActivity {
         total = intent.getStringExtra("total");
         binding.tvTotalAmount.setText("RM: " + total);
         amount = total;
+
+        getAccessToken();
+
+    }
+
+    public void dbGetShopAddress(){
+        DocumentReference docRef = db.collection("shop").document(shopID);
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+
+                        binding.tvRecipientName.setText(document.get("shop_name").toString());
+                        binding.tvTel.setText(document.get("shop_tel").toString());
+                        binding.tvAddr1.setText(document.get("shop_addr1").toString());
+                        binding.tvAddr2.setText(document.get("shop_addr2").toString());
+                        binding.tvCity.setText(document.get("shop_city").toString());
+                        binding.tvPostcode.setText(document.get("shop_postcode").toString());
+                        binding.tvState.setText(document.get("shop_state").toString());
+
+                    } else {
+                        Log.d(TAG, "No such document");
+                    }
+                } else {
+                    Log.d(TAG, "get failed with ", task.getException());
+                }
+            }
+        });
     }
 
     public void fnGoChoosePayment(View view) {
@@ -132,6 +195,7 @@ public class CheckoutActivity2 extends AppCompatActivity {
             {
                 payment_method = data.getStringExtra("payment_method");
                 binding.tvPaymentMethod.setText(payment_method);
+                binding.btnProceed.setEnabled(true);
 
                 Gson gson = new Gson();
                 String json_address = gson.toJson(address);
@@ -213,20 +277,54 @@ public class CheckoutActivity2 extends AppCompatActivity {
     }
 
     public void fnProceed(View view) {
-        if(payment_method.equals("Cash")){
-            Intent intent = new Intent(getApplicationContext(), OrderPlacedActivity.class);
+        if(payment_method == null) {
+            Toast.makeText(this,"Please choose payment method.",Toast.LENGTH_SHORT).show();
+            binding.btnProceed.setEnabled(false);
+        }
+        else {
+            if (payment_method.equals("Cash")) {
+                Intent intent = new Intent(getApplicationContext(), OrderPlacedActivity.class);
             /*intent.putExtra("delivery_method", delivery_method);
             intent.putExtra("address", address);
             intent.putExtra("delivery_time", deliveryTime);
             intent.putExtra("shopname", shopname);
             intent.putExtra("order", order_lists);
             intent.putExtra("total", total);*/
-            startActivity(intent);
-        }
-        if (payment_method.equals("PayPal")){
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                createOrder();
+                startActivity(intent);
+            }
+            if (payment_method.equals("PayPal")) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    createOrder();
+                }
             }
         }
+    }
+
+    void getAccessToken(){
+        String AUTH = "QVVBVFotYUQzM3RBOVlGM3o2OWFzMUNGRDN5YmJMQ0hFZFdqa1RFTUc1R2g2TEY4cnNNWVRUQjdQZ1ZGRkRQVldDTzYwbzZ4ajZaYjJoeEg6RUZoeG9US1paa2dHVHFZSUF0bURhWXN6ZUMyUHQ4aGkyOWI0a2hQUU1fSmhfbHRmYllKM1hZc09jbklGeW1UMFZHU1FOYmE4VmdhcEFwZzA=";
+        AsyncHttpClient client = new AsyncHttpClient();
+        client.addHeader("Accept", "application/json");
+        client.addHeader("Content-type", "application/x-www-form-urlencoded");
+        client.addHeader("Authorization", "Basic "+ AUTH);
+        String jsonString = "grant_type=client_credentials";
+
+        HttpEntity entity = new StringEntity(jsonString, "utf-8");
+
+        client.post(this, "https://api-m.sandbox.paypal.com/v1/oauth2/token", entity, "application/x-www-form-urlencoded",new TextHttpResponseHandler() {
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String response, Throwable throwable) {
+                Log.e("RESPONSE", response);
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, String response) {
+                try {
+                    JSONObject jobj = new JSONObject(response);
+                    accessToken = jobj.getString("access_token");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 }

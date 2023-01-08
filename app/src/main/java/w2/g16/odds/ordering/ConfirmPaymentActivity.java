@@ -43,7 +43,7 @@ public class ConfirmPaymentActivity extends AppCompatActivity {
         amount = prefs.getString("total", "");
 
         //set the orderID string to the UI
-        binding.tvPaymentAmount.setText("Amount: " + amount);
+        binding.tvPaymentAmount.setText("Amount: RM" + amount);
         binding.tvPaymentID.setText("Order ID: " +orderID);
 
         //add an onClick listener to the confirm button

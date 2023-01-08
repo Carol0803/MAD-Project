@@ -16,10 +16,13 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toolbar;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -60,7 +63,6 @@ public class OrderPlacedActivity extends AppCompatActivity {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         Gson gson = new Gson();
         String data = prefs.getString("string_id", "no id"); //no id: default value
-        String delivery_method = prefs.getString("delivery_method", "");
         String payment_method = prefs.getString("payment_method", "");
         if(payment_method.equals("Cash")) {
             order_status = "UNPAID";
@@ -89,18 +91,27 @@ public class OrderPlacedActivity extends AppCompatActivity {
         delivery_time = new Timestamp(deliveryTime);
         shopname = intent.getStringExtra("shopname");
         total = intent.getStringExtra("total");*/
+
+        String delivery_method = prefs.getString("delivery_method", "");
+        if(delivery_method.equals("Home Delivery")){
+            binding.tvRecipientName.setText(address.getReceiver_name());
+            binding.tvTel.setText(address.getReceiver_tel());
+            binding.tvAddr1.setText(address.getAddr1());
+            binding.tvAddr2.setText(address.getAddr2());
+            binding.tvCity.setText(address.getCity());
+            binding.tvPostcode.setText(address.getPostcode());
+            binding.tvState.setText(address.getState());
+        }
+        if(delivery_method.equals("Self Collection")){
+            binding.tvAddress.setText("Pick Up Address");
+            dbGetShopAddress(shopID);
+        }
+
         SimpleDateFormat formatter = new SimpleDateFormat("dd MMMM yyyy");
         binding.tvDeliveryTimeDate.setText(formatter.format(deliveryTime));
         binding.tvShopName.setText(shopname);
         binding.tvOrderDate.setText(formatter.format(new Date()));
         binding.tvDeliveryMethod.setText(delivery_method);
-        binding.tvRecipientName.setText(address.getReceiver_name());
-        binding.tvTel.setText(address.getReceiver_tel());
-        binding.tvAddr1.setText(address.getAddr1());
-        binding.tvAddr2.setText(address.getAddr2());
-        binding.tvCity.setText(address.getCity());
-        binding.tvPostcode.setText(address.getPostcode());
-        binding.tvState.setText(address.getState());
 
 //        order_lists = (ArrayList<Order>) intent.getSerializableExtra("order");
         adapter = new Checkout2Adapter(getLayoutInflater(), order_lists);
@@ -160,6 +171,22 @@ public class OrderPlacedActivity extends AppCompatActivity {
                                         @Override
                                         public void onSuccess(Void aVoid) {
                                             Log.d(TAG, "DocumentSnapshot successfully written!");
+
+                                            db.collection("customer").document("username")
+                                                    .collection("cart").document(shopID)
+                                                    .delete()
+                                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                        @Override
+                                                        public void onSuccess(Void aVoid) {
+                                                            Log.d(TAG, "DocumentSnapshot successfully deleted!");
+                                                        }
+                                                    })
+                                                    .addOnFailureListener(new OnFailureListener() {
+                                                        @Override
+                                                        public void onFailure(@NonNull Exception e) {
+                                                            Log.w(TAG, "Error deleting document", e);
+                                                        }
+                                                    });
                                         }
                                     })
                                     .addOnFailureListener(new OnFailureListener() {
@@ -184,5 +211,33 @@ public class OrderPlacedActivity extends AppCompatActivity {
 
     public void fnGoOrder(View view) {
         startActivity(new Intent(getApplicationContext(), OrderActivity.class));
+    }
+
+    public void dbGetShopAddress(String shopID){
+        DocumentReference docRef = db.collection("shop").document(shopID);
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+
+                        binding.tvRecipientName.setText(document.get("shop_name").toString());
+                        binding.tvTel.setText(document.get("shop_tel").toString());
+                        binding.tvAddr1.setText(document.get("shop_addr1").toString());
+                        binding.tvAddr2.setText(document.get("shop_addr2").toString());
+                        binding.tvCity.setText(document.get("shop_city").toString());
+                        binding.tvPostcode.setText(document.get("shop_postcode").toString());
+                        binding.tvState.setText(document.get("shop_state").toString());
+
+                    } else {
+                        Log.d(TAG, "No such document");
+                    }
+                } else {
+                    Log.d(TAG, "get failed with ", task.getException());
+                }
+            }
+        });
     }
 }
