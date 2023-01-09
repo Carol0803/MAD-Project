@@ -134,6 +134,27 @@ public class ViewProductActivity extends AppCompatActivity {
                                 }
                             });
 
+                            DocumentReference docRef2 = db.collection("shop").document(shopID);
+                            docRef2.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                    if (task.isSuccessful()) {
+                                        DocumentSnapshot document = task.getResult();
+                                        if (document.exists()) {
+                                            Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+
+                                            shopname = document.get("shop_name").toString();
+                                            binding.tvShopName.setText(shopname);
+
+                                        } else {
+                                            Log.d(TAG, "No such document");
+                                        }
+                                    } else {
+                                        Log.d(TAG, "get failed with ", task.getException());
+                                    }
+                                }
+                            });
+
                             binding.btnAddToCart.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
@@ -181,27 +202,6 @@ public class ViewProductActivity extends AppCompatActivity {
                                 }
                             });
                         }
-
-                        DocumentReference docRef2 = db.collection("shop").document(shopID);
-                        docRef2.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                if (task.isSuccessful()) {
-                                    DocumentSnapshot document = task.getResult();
-                                    if (document.exists()) {
-                                        Log.d(TAG, "DocumentSnapshot data: " + document.getData());
-
-                                        shopname = document.get("shop_name").toString();
-                                        binding.tvShopName.setText(shopname);
-
-                                    } else {
-                                        Log.d(TAG, "No such document");
-                                    }
-                                } else {
-                                    Log.d(TAG, "get failed with ", task.getException());
-                                }
-                            }
-                        });
 
                     } else {
                         Log.d(TAG, "No such document");

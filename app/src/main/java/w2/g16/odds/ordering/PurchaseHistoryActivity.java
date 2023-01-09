@@ -2,21 +2,16 @@ package w2.g16.odds.ordering;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -27,56 +22,38 @@ import java.util.Vector;
 
 import w2.g16.odds.MainActivity;
 import w2.g16.odds.R;
-import w2.g16.odds.databinding.ActivityOrderBinding;
+import w2.g16.odds.databinding.ActivityCartBinding;
+import w2.g16.odds.databinding.ActivityPurchaseHistoryBinding;
 import w2.g16.odds.model.Order;
-import w2.g16.odds.product_browsing.ViewProductActivity;
-import w2.g16.odds.shop_recommendation.shop_recommendation;
 
-public class OrderActivity extends AppCompatActivity {
+public class PurchaseHistoryActivity extends AppCompatActivity {
 
-    private ActivityOrderBinding binding;
-
+    private ActivityPurchaseHistoryBinding binding;
     private Order order;
     private Vector<Order> orders;
-    private OrderAdapter adapter;
+    private PurchaseHistoryAdapter adapter;
 
     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityOrderBinding.inflate(getLayoutInflater());
+        binding = ActivityPurchaseHistoryBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        binding.btmNav.setSelectedItemId(R.id.order);
-        binding.btmNav.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        toolbar.setNavigationIcon(R.drawable.ic_back);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-
-                switch(item.getItemId()){
-                    case R.id.home:
-                        startActivity(new Intent(getApplicationContext(), MainActivity.class));
-                        overridePendingTransition(0,0);
-                        return true;
-                    case R.id.recommendation:
-                        startActivity(new Intent(getApplicationContext(), shop_recommendation.class));
-                        overridePendingTransition(0,0);
-                        return true;
-                    case R.id.order:
-                        return true;
-                    case R.id.profile:
-                        startActivity(new Intent(getApplicationContext(), shop_recommendation.class));
-                        overridePendingTransition(0,0);
-                        return true;
-                }
-
-                return false;
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(), MainActivity.class));
             }
         });
 
         final String TAG = "Read Data Activity";
         db.collection("order")
-                .whereNotEqualTo("order_status", "COMPLETED")
+                .whereEqualTo("order_status", "COMPLETED")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -117,25 +94,7 @@ public class OrderActivity extends AppCompatActivity {
                                     }
                                 });
                                 orders = new Vector<>();
-                                adapter = new OrderAdapter(getParent(), getApplicationContext(), getLayoutInflater(), orders);
-                  /*                      new OrderAdapter.OrderAdapterListener() {
-                                    @Override
-                                    public void tvMore(View v, int position) {
-                                        Log.d(TAG, "tvMore at position "+position);
-                                        Order order = orders.get(position);
-                                        String orderID = order.getOrderID();
-
-                                        Intent intent = new Intent(OrderActivity.this, ViewOrderActivity.class);
-                                        intent.putExtra("orderID", orderID);
-                                        startActivity(intent);
-                                    }
-
-                                    @Override
-                                    public void btnView(View v, int position) {
-                                        Log.d(TAG, "btnView at position "+position);
-
-                                    }
-                                });*/
+                                adapter = new PurchaseHistoryAdapter(getParent(), getApplicationContext(), getLayoutInflater(), orders);
 
                                 binding.recOrderList.setAdapter(adapter);
                                 binding.recOrderList.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
@@ -145,6 +104,5 @@ public class OrderActivity extends AppCompatActivity {
                         }
                     }
                 });
-
     }
 }

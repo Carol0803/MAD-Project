@@ -1,5 +1,7 @@
 package w2.g16.odds.ordering;
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -7,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -154,7 +157,8 @@ public class CartChildAdapter extends RecyclerView.Adapter<CartChildAdapter.Cart
     private ArrayList<Integer> selectCheck;
     private int selectedPosition = 0;
     private int current_quantity;
-//    private Context context;
+    private Context context;
+    private CartAdapter adapter;
 
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     final String TAG = "Read Data Activity";
@@ -165,9 +169,9 @@ public class CartChildAdapter extends RecyclerView.Adapter<CartChildAdapter.Cart
 //        this.carts.removeAll(Collections.singleton(null));
     }
 
-   /* public CartChildAdapter(Context context) {
+    public CartChildAdapter(Context context) {
         this.context = context;
-    }*/
+    }
 
     @NonNull
     @Override
@@ -177,7 +181,7 @@ public class CartChildAdapter extends RecyclerView.Adapter<CartChildAdapter.Cart
     }
 
     @Override
-    public void onBindViewHolder(@NonNull CartChildViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull CartChildViewHolder holder, @SuppressLint("RecyclerView") int position) {
         Cart cart = carts.get(position);
 
         holder.tvName.setText(cart.getProduct_name());
@@ -194,35 +198,6 @@ public class CartChildAdapter extends RecyclerView.Adapter<CartChildAdapter.Cart
             public void onClick(View v) {
                 current_quantity += 1;
                 holder.quantity.setText("" + current_quantity);
-
-                /*if(current_quantity == 0){
-                    DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            switch (which) {
-                                case DialogInterface.BUTTON_POSITIVE:
-                                    // Yes button clicked
-                                    // delete from db
-                                    Toast.makeText(context, "Yes Clicked",
-                                            Toast.LENGTH_LONG).show();
-                                    break;
-
-                                case DialogInterface.BUTTON_NEGATIVE:
-                                    // No button clicked
-                                    holder.quantity.setText("1");
-
-                                    break;
-                            }
-                        }
-                    };
-
-                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                    builder.setMessage("Are you sure?")
-                            .setPositiveButton("Yes", dialogClickListener)
-                            .setNegativeButton("No", dialogClickListener).show();
-                }
-                else{
-                    holder.quantity.setText("" + current_quantity);
-                }*/
 
                 DocumentReference addQuantity = db.collection("customer").document("username")
                         .collection("cart").document(cart.getShopID())
@@ -247,47 +222,66 @@ public class CartChildAdapter extends RecyclerView.Adapter<CartChildAdapter.Cart
             @Override
             public void onClick(View v) {
                 current_quantity -= 1;
-                holder.quantity.setText("" + current_quantity);
 
-                /*if(current_quantity == 0) {
-                    DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            switch (which) {
-                                case DialogInterface.BUTTON_POSITIVE:
-                                    // Yes button clicked
-                                    // delete from db
-                                    Toast.makeText(context, "Yes Clicked",
-                                            Toast.LENGTH_LONG).show();
-                                    break;
+                if(current_quantity == 0){
+                    db.collection("customer").document("username")
+                            .collection("cart").document(cart.getShopID())
+                            .collection("cart_product").document(cart.getSKU())
+                            .delete()
+                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    Log.d(TAG, "DocumentSnapshot successfully deleted!");
+                                    Toast.makeText(v.getContext(), "Item removed from cart", Toast.LENGTH_LONG).show();
+                                    carts.remove(position);
+                                    notifyDataSetChanged();
 
-                                case DialogInterface.BUTTON_NEGATIVE:
-                                    // No button clicked
-                                    holder.quantity.setText("1");
-
-                                    break;
-                            }
-                        }
-                    };
+                                    if(carts.size()==0){
+                                        db.collection("customer").document("username")
+                                                .collection("cart").document(cart.getShopID())
+                                                .delete()
+                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                    @Override
+                                                    public void onSuccess(Void aVoid) {
+                                                        Log.d(TAG, "DocumentSnapshot successfully deleted!");
+                                                    }
+                                                })
+                                                .addOnFailureListener(new OnFailureListener() {
+                                                    @Override
+                                                    public void onFailure(@NonNull Exception e) {
+                                                        Log.w(TAG, "Error deleting document", e);
+                                                    }
+                                                });
+                                    }
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Log.w(TAG, "Error deleting document", e);
+                                }
+                            });
                 }
-                else
-                    holder.quantity.setText("" + current_quantity);*/
+                else {
+                    holder.quantity.setText("" + current_quantity);
 
-                DocumentReference addQuantity = db.collection("customer").document("username")
-                        .collection("cart").document(cart.getShopID())
-                        .collection("cart_product").document(cart.getSKU());
-                addQuantity.update("quantity", ""+current_quantity)
-                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                                Log.d(TAG, "DocumentSnapshot successfully updated!");
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Log.w(TAG, "Error updating document", e);
-                            }
-                        });
+                    DocumentReference addQuantity = db.collection("customer").document("username")
+                            .collection("cart").document(cart.getShopID())
+                            .collection("cart_product").document(cart.getSKU());
+                    addQuantity.update("quantity", "" + current_quantity)
+                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    Log.d(TAG, "DocumentSnapshot successfully updated!");
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Log.w(TAG, "Error updating document", e);
+                                }
+                            });
+                }
             }
         });
     }
@@ -297,7 +291,7 @@ public class CartChildAdapter extends RecyclerView.Adapter<CartChildAdapter.Cart
         return carts.size();
     }
 
-    public class CartChildViewHolder extends RecyclerView.ViewHolder{
+    public class CartChildViewHolder extends RecyclerView.ViewHolder {
 
         private final TextView tvName, tvPrice, quantity;
         private final ImageView img;

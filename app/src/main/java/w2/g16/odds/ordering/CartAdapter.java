@@ -179,7 +179,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
 
 //        holder.recProduct.setHasFixedSize(false);
         holder.recProduct.setLayoutManager(new LinearLayoutManager(holder.itemView.getContext()));
-        CartChildAdapter cartChildAdapter = new CartChildAdapter();
+        CartChildAdapter cartChildAdapter = new CartChildAdapter(activity);
 
         cartChildAdapter.setChildItemList(shop.getCartList());
         holder.recProduct.setAdapter(cartChildAdapter);

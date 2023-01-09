@@ -26,7 +26,7 @@ public class OrderCompletedPopUp {
     public void showPopupWindow(final View view) {
 
         LayoutInflater inflater = (LayoutInflater) view.getContext().getSystemService(view.getContext().LAYOUT_INFLATER_SERVICE);
-        View popupView = inflater.inflate(R.layout.activity_cart_delete_pop_up, null);
+        View popupView = inflater.inflate(R.layout.activity_order_completed_pop_up, null);
 
         int width = LinearLayout.LayoutParams.MATCH_PARENT;
         int height = LinearLayout.LayoutParams.MATCH_PARENT;

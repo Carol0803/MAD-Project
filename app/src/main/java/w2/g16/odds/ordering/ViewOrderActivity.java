@@ -194,7 +194,6 @@ public class ViewOrderActivity extends AppCompatActivity {
                                 ordered_product.add(new Order(SKU, product_name, price, quantity, image));
                                 adapter.notifyItemInserted(ordered_product.size());
                             }
-
                         } else {
                             Log.d(TAG, "Error getting documents: ", task.getException());
                         }
