@@ -30,7 +30,7 @@
                 app:title=" " />
 
             <TextView
-                android:id="@+id/tvCheckout"
+                android:id="@+id/tvOrder"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/league_gothic"
@@ -43,6 +43,21 @@
                 app:layout_constraintEnd_toEndOf="@id/toolbar"
                 app:layout_constraintStart_toStartOf="@id/toolbar"
                 app:layout_constraintTop_toTopOf="@id/toolbar" />
+
+            <TextView
+                android:id="@+id/tvHistory"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:autoLink="all"
+                android:fontFamily="@font/belleza"
+                android:paddingEnd="110dp"
+                android:text="History"
+                android:textColor="@color/white"
+                android:textSize="17sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@id/toolbar"
+                app:layout_constraintStart_toEndOf="@id/tvOrder"
+                app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.appbar.AppBarLayout>

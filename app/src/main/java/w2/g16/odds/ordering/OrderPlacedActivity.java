@@ -24,6 +24,8 @@ import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -39,7 +41,10 @@ import java.util.Vector;
 import w2.g16.odds.R;
 import w2.g16.odds.databinding.ActivityOrderPlacedBinding;
 import w2.g16.odds.model.Address;
+import w2.g16.odds.model.Cart;
 import w2.g16.odds.model.Order;
+import w2.g16.odds.model.Shop;
+import w2.g16.odds.model.UserEmail;
 
 public class OrderPlacedActivity extends AppCompatActivity {
 
@@ -50,6 +55,7 @@ public class OrderPlacedActivity extends AppCompatActivity {
     private ArrayList<Order> order_lists;
     private Checkout2Adapter adapter;
     private String orderID;
+    private String email;
 
     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -59,6 +65,8 @@ public class OrderPlacedActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityOrderPlacedBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        email = UserEmail.getEmail(getApplicationContext());
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         Gson gson = new Gson();
@@ -126,7 +134,7 @@ public class OrderPlacedActivity extends AppCompatActivity {
         order.put("delivery_method", delivery_method);
         order.put("delivery_time", new Timestamp(deliveryTime));
         order.put("order_amount", total);
-        order.put("order_by", "");
+        order.put("order_by", email);
         order.put("order_date", new Timestamp(new Date()));
         order.put("order_from", shopID);
         order.put("shop_name", shopname);
@@ -163,30 +171,67 @@ public class OrderPlacedActivity extends AppCompatActivity {
                             ordered_product.put("product_name", order.getProduct_name());
                             ordered_product.put("quantity", order.getQuantity());
                             ordered_product.put("price", order.getProduct_price());
+                            ordered_product.put("rated", false);
 
                             db.collection("order").document(orderID)
-                                    .collection("ordered_product").document(ordered_product_ID)
+                                    .collection("ordered_product").document(order.getSKU())
                                     .set(ordered_product)
                                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
                                         public void onSuccess(Void aVoid) {
                                             Log.d(TAG, "DocumentSnapshot successfully written!");
 
-                                            db.collection("customer").document("username")
-                                                    .collection("cart").document(shopID)
-                                                    .delete()
-                                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            db.collection("customer/" + email + "/cart/" + shopID + "/cart_product")
+                                                    .get()
+                                                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                                                         @Override
-                                                        public void onSuccess(Void aVoid) {
-                                                            Log.d(TAG, "DocumentSnapshot successfully deleted!");
-                                                        }
-                                                    })
-                                                    .addOnFailureListener(new OnFailureListener() {
-                                                        @Override
-                                                        public void onFailure(@NonNull Exception e) {
-                                                            Log.w(TAG, "Error deleting document", e);
+                                                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                            if (task.isSuccessful()) {
+                                                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                                                    Log.d(TAG, document.getId() + " => " + document.getData());
+
+                                                                    String productID = document.getId();
+
+                                                                    db.collection("customer").document(email)
+                                                                            .collection("cart").document(shopID)
+                                                                            .collection("cart_product").document(productID)
+                                                                            .delete()
+                                                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                                @Override
+                                                                                public void onSuccess(Void aVoid) {
+                                                                                    Log.d(TAG, "DocumentSnapshot successfully deleted!");
+                                                                                }
+                                                                            })
+                                                                            .addOnFailureListener(new OnFailureListener() {
+                                                                                @Override
+                                                                                public void onFailure(@NonNull Exception e) {
+                                                                                    Log.w(TAG, "Error deleting document", e);
+                                                                                }
+                                                                            });
+
+                                                                }
+                                                                db.collection("customer").document(email)
+                                                                        .collection("cart").document(shopID)
+                                                                        .delete()
+                                                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                            @Override
+                                                                            public void onSuccess(Void aVoid) {
+                                                                                Log.d(TAG, "DocumentSnapshot successfully deleted!");
+                                                                            }
+                                                                        })
+                                                                        .addOnFailureListener(new OnFailureListener() {
+                                                                            @Override
+                                                                            public void onFailure(@NonNull Exception e) {
+                                                                                Log.w(TAG, "Error deleting document", e);
+                                                                            }
+                                                                        });
+                                                            } else {
+                                                                Log.d(TAG, "Error getting documents: ", task.getException());
+                                                            }
                                                         }
                                                     });
+
+
                                         }
                                     })
                                     .addOnFailureListener(new OnFailureListener() {

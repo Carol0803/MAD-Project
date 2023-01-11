@@ -36,6 +36,7 @@ import w2.g16.odds.R;
 import w2.g16.odds.model.Order;
 import w2.g16.odds.model.Products;
 import w2.g16.odds.model.Shop;
+import w2.g16.odds.model.UserEmail;
 
 public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder>  {
 
@@ -147,6 +148,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
     private String selected_shopname, selected_shopID;
     private ArrayList<Order> orders;
     private int selectedPosition = -1;
+    private String email;
 
     private static final DecimalFormat df = new DecimalFormat("0.00");
 
@@ -195,7 +197,9 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
 
             selected_shopname = shop.getShopname();
             selected_shopID = shop.getShopID();
-            db.collection("customer/username/cart/" + shop.getShopID() + "/cart_product")
+            email = UserEmail.getEmail(activity.getApplicationContext());
+
+            db.collection("customer/" + email + "/cart/" + shop.getShopID() + "/cart_product")
                     .get()
                     .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                         @Override

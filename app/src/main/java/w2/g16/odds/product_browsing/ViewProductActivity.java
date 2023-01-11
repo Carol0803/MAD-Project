@@ -32,6 +32,7 @@ import java.util.Map;
 import w2.g16.odds.R;
 import w2.g16.odds.databinding.ActivityViewProductBinding;
 import w2.g16.odds.model.Cart;
+import w2.g16.odds.model.UserEmail;
 import w2.g16.odds.ordering.CartActivity;
 
 public class ViewProductActivity extends AppCompatActivity {
@@ -40,6 +41,7 @@ public class ViewProductActivity extends AppCompatActivity {
     private String SKU;
     private String shopID, shopname, name, price, rating, description, sold_item, image, currentStock="0";
     private int currentQuantity = 1;
+    private String email;
 
     private static final DecimalFormat df = new DecimalFormat("0.0");
 
@@ -61,6 +63,8 @@ public class ViewProductActivity extends AppCompatActivity {
                 onBackPressed();
             }
         });
+
+        email = UserEmail.getEmail(getApplicationContext());
 
         Intent intent = getIntent();
         SKU = intent.getStringExtra("SKU");
@@ -158,7 +162,7 @@ public class ViewProductActivity extends AppCompatActivity {
                             binding.btnAddToCart.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    DocumentReference docRef3 = db.collection("customer").document("username")
+                                    DocumentReference docRef3 = db.collection("customer").document(email)
                                             .collection("cart").document(shopID);
                                     docRef3.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                                         @Override
@@ -176,7 +180,7 @@ public class ViewProductActivity extends AppCompatActivity {
                                                     Map<String, Object> shop = new HashMap<>();
                                                     shop.put("shop_name", shopname);
 
-                                                    db.collection("customer").document("username")
+                                                    db.collection("customer").document(email)
                                                             .collection("cart").document(shopID)
                                                             .set(shop)
                                                             .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -224,7 +228,7 @@ public class ViewProductActivity extends AppCompatActivity {
 
     public void addProductToCart(){
 
-        DocumentReference docRef = db.collection("customer").document("username")
+        DocumentReference docRef = db.collection("customer").document(email)
                 .collection("cart").document(shopID)
                 .collection("cart_product").document(SKU);
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -244,7 +248,7 @@ public class ViewProductActivity extends AppCompatActivity {
                         Map<String, Object> data = new HashMap<>();
                         data.put("quantity", quantity);
 
-                        db.collection("customer").document("username")
+                        db.collection("customer").document(email)
                                 .collection("cart").document(shopID)
                                 .collection("cart_product").document(SKU)
                                 .set(data, SetOptions.merge())
@@ -274,7 +278,7 @@ public class ViewProductActivity extends AppCompatActivity {
                         data.put("product_price", price);
                         data.put("quantity", currentQuantity);
 
-                        db.collection("customer").document("username")
+                        db.collection("customer").document(email)
                                 .collection("cart").document(shopID)
                                 .collection("cart_product").document(SKU)
                                 .set(data)

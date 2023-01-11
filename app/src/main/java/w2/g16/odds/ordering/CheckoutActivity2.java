@@ -63,6 +63,7 @@ import w2.g16.odds.databinding.ActivityCheckout2Binding;
 import w2.g16.odds.databinding.ActivityCheckoutBinding;
 import w2.g16.odds.model.Address;
 import w2.g16.odds.model.Order;
+import w2.g16.odds.model.UserEmail;
 
 public class CheckoutActivity2 extends AppCompatActivity {
 
@@ -78,6 +79,7 @@ public class CheckoutActivity2 extends AppCompatActivity {
     private String total;
     static String accessToken;
     private String amount;
+    private String email;
 
     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -97,6 +99,8 @@ public class CheckoutActivity2 extends AppCompatActivity {
                 onBackPressed();
             }
         });
+
+        email = UserEmail.getEmail(getApplicationContext());
 
         Intent intent = getIntent();
         delivery_method = intent.getStringExtra("delivery_method");

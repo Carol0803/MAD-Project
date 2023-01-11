@@ -67,65 +67,92 @@ public class ViewPurchaseHistoryAdapter extends RecyclerView.Adapter<ViewPurchas
                 .load(order.getProduct_img())
                 .into(holder.imgProduct);
 
-        holder.btnRate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String rating = String.valueOf(holder.ratingBar.getRating());
+        if(order.getRated().equals("true")){
+            holder.btnRate.setEnabled(false);
+            holder.btnRate.setText("Rated");
+            holder.ratingBar.setVisibility(View.INVISIBLE);
+        }
 
-                if(rating.equals("0.0")) {
-                    Toast.makeText(v.getContext(), "Rating not saved. Select star(s) to rate the item.", Toast.LENGTH_SHORT).show();
-                }
+        if(order.getRated().equals("false")) {
+            holder.btnRate.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String rating = String.valueOf(holder.ratingBar.getRating());
 
-                if(!rating.equals("0.0")) {
-                    DocumentReference docRef = db.collection("products").document(order.getSKU());
-                    docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                            if (task.isSuccessful()) {
-                                DocumentSnapshot document = task.getResult();
-                                if (document.exists()) {
-                                    Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+                    if (rating.equals("0.0")) {
+                        Toast.makeText(v.getContext(), "Rating not saved. Select star(s) to rate the item.", Toast.LENGTH_SHORT).show();
+                    }
 
-                                    int product_rating_times = Integer.parseInt(document.get("product_rating_times").toString());
-                                    int new_product_rating_times = product_rating_times + 1;
-                                    double product_rating = Double.parseDouble(document.get("product_rating").toString());
+                    if (!rating.equals("0.0")) {
+                        DocumentReference docRef = db.collection("products").document(order.getSKU());
+                        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    DocumentSnapshot document = task.getResult();
+                                    if (document.exists()) {
+                                        Log.d(TAG, "DocumentSnapshot data: " + document.getData());
 
-                                    double new_rating = ((product_rating_times * product_rating) + Double.parseDouble(rating)) / new_product_rating_times;
+                                        int product_rating_times = Integer.parseInt(document.get("product_rating_times").toString());
+                                        int new_product_rating_times = product_rating_times + 1;
+                                        double product_rating = Double.parseDouble(document.get("product_rating").toString());
 
-                                    Map<String, Object> data = new HashMap<>();
-                                    data.put("product_rating", "" + df2.format(parseDouble(String.valueOf(new_rating))));
-                                    data.put("product_rating_times", "" + new_product_rating_times);
+                                        double new_rating = ((product_rating_times * product_rating) + Double.parseDouble(rating)) / new_product_rating_times;
 
-                                    db.collection("products").document(order.getSKU())
-                                            .set(data, SetOptions.merge())
-                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                @Override
-                                                public void onSuccess(Void aVoid) {
-                                                    Log.d(TAG, "DocumentSnapshot successfully written!");
-                                                    Toast.makeText(v.getContext(), "Rating saved.", Toast.LENGTH_SHORT).show();
-                                                    holder.btnRate.setText("Rated");
-                                                    holder.btnRate.setEnabled(false);
-                                                }
-                                            })
-                                            .addOnFailureListener(new OnFailureListener() {
-                                                @Override
-                                                public void onFailure(@NonNull Exception e) {
-                                                    Log.w(TAG, "Error writing document", e);
-                                                }
-                                            });
+                                        Map<String, Object> data = new HashMap<>();
+                                        data.put("product_rating", "" + df2.format(parseDouble(String.valueOf(new_rating))));
+                                        data.put("product_rating_times", "" + new_product_rating_times);
 
+                                        db.collection("products").document(order.getSKU())
+                                                .set(data, SetOptions.merge())
+                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                    @Override
+                                                    public void onSuccess(Void aVoid) {
+                                                        Log.d(TAG, "DocumentSnapshot successfully written!");
+                                                        Toast.makeText(v.getContext(), "Rating saved.", Toast.LENGTH_SHORT).show();
+
+                                                        Map<String, Object> data2 = new HashMap<>();
+                                                        data2.put("rated", true);
+
+                                                        db.collection("order").document(order.getOrderID())
+                                                                .collection("ordered_product").document(order.getSKU())
+                                                                .set(data2, SetOptions.merge())
+                                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                    @Override
+                                                                    public void onSuccess(Void aVoid) {
+                                                                        Log.d(TAG, "DocumentSnapshot successfully written!");
+                                                                        Toast.makeText(v.getContext(), "Rating saved.", Toast.LENGTH_SHORT).show();
+                                                                        holder.btnRate.setText("Rated");
+                                                                        holder.btnRate.setEnabled(false);
+                                                                    }
+                                                                })
+                                                                .addOnFailureListener(new OnFailureListener() {
+                                                                    @Override
+                                                                    public void onFailure(@NonNull Exception e) {
+                                                                        Log.w(TAG, "Error writing document", e);
+                                                                    }
+                                                                });
+                                                    }
+                                                })
+                                                .addOnFailureListener(new OnFailureListener() {
+                                                    @Override
+                                                    public void onFailure(@NonNull Exception e) {
+                                                        Log.w(TAG, "Error writing document", e);
+                                                    }
+                                                });
+
+                                    } else {
+                                        Log.d(TAG, "No such document");
+                                    }
                                 } else {
-                                    Log.d(TAG, "No such document");
+                                    Log.d(TAG, "get failed with ", task.getException());
                                 }
-                            } else {
-                                Log.d(TAG, "get failed with ", task.getException());
                             }
-                        }
-                    });
+                        });
+                    }
                 }
-            }
-        });
-
+            });
+        }
     }
 
     @Override

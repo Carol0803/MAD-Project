@@ -35,6 +35,7 @@ import w2.g16.odds.R;
 import w2.g16.odds.databinding.ActivityCheckoutBinding;
 import w2.g16.odds.model.Address;
 import w2.g16.odds.model.Order;
+import w2.g16.odds.model.UserEmail;
 
 public class CheckoutActivity extends AppCompatActivity {
 
@@ -46,6 +47,7 @@ public class CheckoutActivity extends AppCompatActivity {
     private ArrayList<Order> orders;
     private static Date delivery_time;
     private String total;
+    private String email;
 
     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -66,6 +68,7 @@ public class CheckoutActivity extends AppCompatActivity {
             }
         });
 
+        email = UserEmail.getEmail(getApplicationContext());
         dbGetDefaultAddress();
 
         binding.rbDelivery.setChecked(true);
@@ -158,7 +161,7 @@ public class CheckoutActivity extends AppCompatActivity {
 
     public void dbGetDefaultAddress(){
         final String TAG = "Read Data Activity";
-        db.collection("customer/username/address")
+        db.collection("customer/" + email + "/address")
                 .whereEqualTo("default", true)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -183,7 +186,7 @@ public class CheckoutActivity extends AppCompatActivity {
                                 city = document.get("city").toString();
                                 postcode = document.get("postcode").toString();
                                 state = document.get("state").toString();
-                                location = document.get("location").toString();
+//                                location = document.get("location").toString();
                                 receiver_name = document.get("receiver_name").toString();
                                 receiver_tel = document.get("receiver_tel").toString();
                             }

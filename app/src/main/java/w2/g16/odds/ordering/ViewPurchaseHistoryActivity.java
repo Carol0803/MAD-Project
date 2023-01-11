@@ -42,6 +42,9 @@ public class ViewPurchaseHistoryActivity extends AppCompatActivity {
     private ViewPurchaseHistoryAdapter adapter;
     private String orderID;
     private String order_status;
+    private String shopID;
+    private String shopname;
+    private String total;
 
     SimpleDateFormat formatter = new SimpleDateFormat("dd MMMM yyyy");
     FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -54,7 +57,7 @@ public class ViewPurchaseHistoryActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        toolbar.setNavigationIcon(R.drawable.ic_back_black);
+        toolbar.setNavigationIcon(R.drawable.ic_back);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -75,17 +78,20 @@ public class ViewPurchaseHistoryActivity extends AppCompatActivity {
                     if (document.exists()) {
                         Log.d(TAG, "DocumentSnapshot data: " + document.getData());
 
-                        binding.tvShopName.setText(document.get("shop_name").toString());
+                        shopname = document.get("shop_name").toString();
+                        binding.tvShopName.setText(shopname);
                         binding.tvOrderID.setText(document.getId());
                         Timestamp timestamp = (Timestamp) document.get("order_date");
                         Date order_date = timestamp.toDate();
                         binding.tvOrderDate.setText(formatter.format(order_date));
                         order_status = document.get("order_status").toString();
-                        String shopID = document.get("order_from").toString();
+                        shopID = document.get("order_from").toString();
                         String delivery_method = document.get("delivery_method").toString();
                         binding.tvDeliveryMethod.setText(delivery_method);
                         Timestamp timestamp2 = (Timestamp) document.get("order_date");
                         Date delivery_time = timestamp2.toDate();
+                        total = document.get("order_amount").toString();
+                        binding.tvTotal.setText(total);
 
                     } else {
                         Log.d(TAG, "No such document");
@@ -111,8 +117,9 @@ public class ViewPurchaseHistoryActivity extends AppCompatActivity {
                                 String product_name = document.get("product_name").toString();
                                 String quantity = document.get("quantity").toString();
                                 String price = document.get("price").toString();
+                                String rated = document.get("rated").toString();
 
-                                ordered_product.add(new Order(SKU, product_name, price, quantity, image));
+                                ordered_product.add(new Order(orderID, SKU, product_name, price, quantity, image, rated));
                                 adapter.notifyItemInserted(ordered_product.size());
                             }
 
@@ -125,5 +132,17 @@ public class ViewPurchaseHistoryActivity extends AppCompatActivity {
         adapter = new ViewPurchaseHistoryAdapter(getLayoutInflater(), ordered_product);
         binding.recItems.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         binding.recItems.setAdapter(adapter);
+
+        binding.btnRepurchase.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), CheckoutActivity.class);
+                intent.putExtra("shopname", shopname);
+                intent.putExtra("shopID", shopID);
+                intent.putExtra("order", ordered_product);
+                intent.putExtra("total", total);
+                startActivity(intent);
+            }
+        });
     }
 }

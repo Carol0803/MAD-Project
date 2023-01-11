@@ -47,10 +47,9 @@ public class MainActivity extends AppCompatActivity {
     private Category category;
     private Vector<Category> categories;
     private CategoryAdapter adapter;
-//    private Product product;
     private Vector<Products> products;
     private ProductAdapter adapterProduct;
-    //private String name, shopname, img, price;
+    private String email;
 
     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -160,7 +159,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void fnGoCart(View view) {
-        startActivity(new Intent(getApplicationContext(), CartActivity.class));
+        Intent intent = new Intent(getApplicationContext(), CartActivity.class);
+        intent.putExtra("email", email);
+        startActivity(intent);
     }
 
     public BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {

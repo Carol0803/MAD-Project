@@ -25,6 +25,7 @@ import java.util.Vector;
 import w2.g16.odds.R;
 import w2.g16.odds.databinding.ActivityChooseAddressBinding;
 import w2.g16.odds.model.Address;
+import w2.g16.odds.model.UserEmail;
 
 public class ChooseAddressActivity extends AppCompatActivity {
 
@@ -34,6 +35,7 @@ public class ChooseAddressActivity extends AppCompatActivity {
     private Vector<Address> addresses;
     private ChooseAddressAdapter adapter;
     private Address address_chosen;
+    private String email;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,8 +54,10 @@ public class ChooseAddressActivity extends AppCompatActivity {
             }
         });
 
+        email = UserEmail.getEmail(getApplicationContext());
+
         final String TAG = "Read Data Activity";
-        db.collection("customer/username/address")
+        db.collection("customer/" + email + "/address")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -78,7 +82,7 @@ public class ChooseAddressActivity extends AppCompatActivity {
                                 city = document.get("city").toString();
                                 postcode = document.get("postcode").toString();
                                 state = document.get("state").toString();
-                                location = document.get("location").toString();
+//                                location = document.get("location").toString();
                                 receiver_name = document.get("receiver_name").toString();
                                 receiver_tel = document.get("receiver_tel").toString();
                                 isDefault = document.get("default").toString();

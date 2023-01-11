@@ -31,6 +31,7 @@ import w2.g16.odds.model.Order;
 import w2.g16.odds.R;
 import w2.g16.odds.databinding.ActivityCartBinding;
 import w2.g16.odds.model.Shop;
+import w2.g16.odds.model.UserEmail;
 
 public class CartActivity extends AppCompatActivity {
 
@@ -44,6 +45,7 @@ public class CartActivity extends AppCompatActivity {
     private String total;
     private String deliver_by = null, SKU = null, name = null, variationID = null,
             variation_name = null, price = null, quantity = null, img = null;
+    private String email;
 
     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -62,6 +64,8 @@ public class CartActivity extends AppCompatActivity {
                 startActivity(new Intent(getApplicationContext(), MainActivity.class));
             }
         });
+
+        email = UserEmail.getEmail(getApplicationContext());
 
         LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver,
                 new IntentFilter("return_total"));
@@ -133,7 +137,7 @@ public class CartActivity extends AppCompatActivity {
         binding.recCart.setAdapter(adapter);
 
         final String TAG = "Read Data Activity";
-        db.collection("customer/username/cart")
+        db.collection("customer/" + email + "/cart")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -165,7 +169,7 @@ public class CartActivity extends AppCompatActivity {
 
                             List<Cart> carts = new ArrayList<Cart>();
                             shop_list = new ArrayList<Shop>();
-                            db.collection("customer/username/cart/" + shop_id + "/cart_product")
+                            db.collection("customer/" + email + "/cart/" + shop_id + "/cart_product")
                                     .get()
                                     .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                                         @Override
@@ -216,9 +220,6 @@ public class CartActivity extends AppCompatActivity {
 //        shop_lists = new Vector<>();
 //        shops = new Vector<>();
 //        carts = new Vector<>();
-
-
-
     }
 
     public void fnCheckout(View view) {
