@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -23,15 +22,11 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.squareup.picasso.Picasso;
 
-import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Vector;
 
-import w2.g16.odds.ProductAdapter;
 import w2.g16.odds.R;
 import w2.g16.odds.databinding.ActivityViewShopBinding;
-import w2.g16.odds.model.PriceComparator;
 import w2.g16.odds.model.Products;
 
 public class ViewShopActivity extends AppCompatActivity {

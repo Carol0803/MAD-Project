@@ -37,15 +37,11 @@ public class SignupActivity extends AppCompatActivity {
     EditText FName, Contact, Email, Add1, Add2, City, Postcode, State, Username, Password, rePass;
 
     FirebaseAuth mAuth = FirebaseAuth.getInstance();;
-
     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        requestWindowFeature(Window.FEATURE_NO_TITLE); //will hide the title
-//        getSupportActionBar().hide(); // hide the title bar
-//        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN); //enable full screen
         setContentView(R.layout.activity_signup);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -71,16 +67,6 @@ public class SignupActivity extends AppCompatActivity {
         Password=findViewById(R.id.editTextTextPassword);
         rePass=findViewById(R.id.editTextTextPassword2);
 
-//        button = (ImageView) findViewById(R.id.backbtn);
-//
-//
-//        button.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-////                openMain();
-//            }
-//        });
-
         textView = findViewById(R.id.textViewLogin);
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -102,7 +88,6 @@ public class SignupActivity extends AppCompatActivity {
         Map<String, Object> user = new HashMap<>();
         user.put("tel", Contact.getText().toString());
         user.put("username", Username.getText().toString());
-        user.put("password", Password.getText().toString());
 
         Map<String, Object> user_address = new HashMap<>();
         user_address.put("receiver_name", FName.getText().toString());
@@ -226,9 +211,4 @@ public class SignupActivity extends AppCompatActivity {
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
     }
-
-/*    public void openMain(){
-        Intent mainpage = new Intent(SignupActivity.this, HomePage.class);
-        startActivity(mainpage)
-        ;}*/
 }

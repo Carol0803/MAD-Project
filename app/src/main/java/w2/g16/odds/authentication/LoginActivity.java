@@ -1,6 +1,7 @@
 package w2.g16.odds.authentication;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
@@ -11,9 +12,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -21,6 +23,12 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
+
+import org.checkerframework.checker.nullness.qual.NonNull;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import w2.g16.odds.MainActivity;
 import w2.g16.odds.R;
@@ -85,8 +93,6 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v)
             {
                 openLogin();
-
-
             }
         });
     }
@@ -129,6 +135,8 @@ public class LoginActivity extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
+                                Toast.makeText(LoginActivity.this, "Logged In", Toast.LENGTH_SHORT).show();
+
                                 // Login success, start the data activity
                                 UserEmail.setEmail(getApplicationContext(), email);
                                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);

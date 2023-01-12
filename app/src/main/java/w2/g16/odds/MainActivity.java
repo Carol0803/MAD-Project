@@ -2,7 +2,8 @@ package w2.g16.odds;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SearchView;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -12,14 +13,12 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.text.InputType;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.ImageView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -27,17 +26,25 @@ import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.SetOptions;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Vector;
 
+import w2.g16.odds.authentication.LoginActivity;
 import w2.g16.odds.databinding.ActivityMainBinding;
 import w2.g16.odds.model.Category;
 import w2.g16.odds.model.Products;
+import w2.g16.odds.model.UserEmail;
 import w2.g16.odds.ordering.CartActivity;
 import w2.g16.odds.ordering.OrderActivity;
+import w2.g16.odds.product_browsing.CategoryAdapter;
+import w2.g16.odds.product_browsing.ProductAdapter;
 import w2.g16.odds.product_browsing.SearchActivity;
 import w2.g16.odds.product_browsing.ViewCategoryActivity;
 import w2.g16.odds.product_browsing.ViewProductActivity;
+import w2.g16.odds.setting.SettingsActivity;
 import w2.g16.odds.shop_recommendation.shop_recommendation;
 
 public class MainActivity extends AppCompatActivity {
@@ -50,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
     private Vector<Products> products;
     private ProductAdapter adapterProduct;
     private String email;
+    GpsTracker gpsTracker;
 
     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -58,6 +66,34 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        email = UserEmail.getEmail(getApplicationContext());
+
+        gpsTracker = new GpsTracker(MainActivity.this);
+        if(gpsTracker.canGetLocation()){
+            double latitude = gpsTracker.getLatitude();
+            double longitude = gpsTracker.getLongitude();
+
+            // Update one field, creating the document if it does not already exist.
+            Map<String, Object> data = new HashMap<>();
+            data.put("curLatitude", latitude);
+            data.put("curLongitude", longitude);
+
+            db.collection("customer").document(email)
+                    .set(data, SetOptions.merge());
+
+        }else{
+            gpsTracker.showSettingsAlert();
+        }
+
+        try {
+            if (ContextCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ) {
+                ActivityCompat.requestPermissions(MainActivity.this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 101);
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         binding.searchBar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -85,7 +121,7 @@ public class MainActivity extends AppCompatActivity {
                         overridePendingTransition(0,0);
                         return true;
                     case R.id.profile:
-                        startActivity(new Intent(getApplicationContext(), shop_recommendation.class));
+                        startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
                         overridePendingTransition(0,0);
                         return true;
                 }
@@ -160,7 +196,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void fnGoCart(View view) {
         Intent intent = new Intent(getApplicationContext(), CartActivity.class);
-        intent.putExtra("email", email);
         startActivity(intent);
     }
 

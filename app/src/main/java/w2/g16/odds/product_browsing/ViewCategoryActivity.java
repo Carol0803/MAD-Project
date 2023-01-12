@@ -27,7 +27,6 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.Collections;
 import java.util.Vector;
 
-import w2.g16.odds.ProductAdapter;
 import w2.g16.odds.R;
 import w2.g16.odds.databinding.ActivityViewCategoryBinding;
 import w2.g16.odds.model.PriceComparator;

@@ -11,7 +11,7 @@ import androidx.appcompat.widget.Toolbar;
 import w2.g16.odds.R;
 
 public class ResetPassActivity extends AppCompatActivity {
-
+/*
     Button button;
 
     @Override
@@ -33,5 +33,5 @@ public class ResetPassActivity extends AppCompatActivity {
     public void openLogin(){
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
-    }
+    }*/
 }

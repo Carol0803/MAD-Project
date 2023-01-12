@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:background="#4E457D"
     tools:context=".authentication.VerifyCodeActivity">
+<!--
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appbar"
@@ -106,5 +107,6 @@
             android:text="NEXT" />
 
     </LinearLayout>
+-->
 
 </RelativeLayout>

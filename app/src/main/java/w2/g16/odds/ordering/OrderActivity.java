@@ -2,6 +2,7 @@ package w2.g16.odds.ordering;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -31,6 +32,7 @@ import w2.g16.odds.databinding.ActivityOrderBinding;
 import w2.g16.odds.model.Order;
 import w2.g16.odds.model.UserEmail;
 import w2.g16.odds.product_browsing.ViewProductActivity;
+import w2.g16.odds.setting.SettingsActivity;
 import w2.g16.odds.shop_recommendation.shop_recommendation;
 
 public class OrderActivity extends AppCompatActivity {
@@ -50,6 +52,16 @@ public class OrderActivity extends AppCompatActivity {
         binding = ActivityOrderBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        toolbar.setNavigationIcon(R.drawable.ic_back);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
+
         binding.btmNav.setSelectedItemId(R.id.order);
         binding.btmNav.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
@@ -67,7 +79,7 @@ public class OrderActivity extends AppCompatActivity {
                     case R.id.order:
                         return true;
                     case R.id.profile:
-                        startActivity(new Intent(getApplicationContext(), shop_recommendation.class));
+                        startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
                         overridePendingTransition(0,0);
                         return true;
                 }

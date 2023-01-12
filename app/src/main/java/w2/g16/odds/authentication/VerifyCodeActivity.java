@@ -13,7 +13,7 @@ import w2.g16.odds.R;
 
 public class VerifyCodeActivity extends AppCompatActivity {
 
-    Button next;
+   /* Button next;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,5 +47,5 @@ public class VerifyCodeActivity extends AppCompatActivity {
     public void openResetPass(){
         Intent intent = new Intent(this, ResetPassActivity.class);
         startActivity(intent);
-    }
+    }*/
 }
