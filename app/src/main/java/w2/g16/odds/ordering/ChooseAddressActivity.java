@@ -1,10 +1,12 @@
 package w2.g16.odds.ordering;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -54,6 +56,14 @@ public class ChooseAddressActivity extends AppCompatActivity {
             }
         });
 
+        /*binding.pullToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refreshData(); // your code
+                binding.pullToRefresh.setRefreshing(false);
+            }
+        });*/
+
         email = UserEmail.getEmail(getApplicationContext());
 
         final String TAG = "Read Data Activity";
@@ -90,6 +100,16 @@ public class ChooseAddressActivity extends AppCompatActivity {
                                 addresses.add(new Address(receiver_name, receiver_tel, addr1, addr2, city, postcode, state, isDefault));
                                 adapter.notifyItemChanged(addresses.size());
                             }
+
+                            binding.btnAddAddress.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Intent intent = new Intent(getApplicationContext(), AddNewAddressActivity.class);
+                                    intent.putExtra("no_of_addr", addresses.size());
+                                    startActivityForResult(intent, 2);
+                                }
+                            });
+
                         } else {
                             Log.d(TAG, "Error getting documents: ", task.getException());
                         }
@@ -105,6 +125,9 @@ public class ChooseAddressActivity extends AppCompatActivity {
         binding.btnConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+//                Intent intent2 = new Intent(getApplicationContext(), CheckoutActivity.class);
+//                intent2.putExtra("objAddress", address_chosen);
+//                startActivity(intent2);
                 Intent intent2 = new Intent();
                 intent2.putExtra("objAddress", address_chosen);
                 setResult(RESULT_OK, intent2);
@@ -125,4 +148,65 @@ public class ChooseAddressActivity extends AppCompatActivity {
         }
     };
 
+    public void refreshData(){
+        final String TAG = "Read Data Activity";
+        db.collection("customer/" + email + "/address")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            String receiver_name = null;
+                            String receiver_tel = null;
+                            String addr1 = null;
+                            String addr2 = null;
+                            String city = null;
+                            String postcode = null;
+                            String state = null;
+                            String location = null;
+                            String isDefault = null;
+
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Log.d(TAG, document.getId() + " => " + document.getData());
+
+                                String addrID = document.getId();
+                                addr1 = document.get("addr1").toString();
+                                addr2 = document.get("addr2").toString();
+                                city = document.get("city").toString();
+                                postcode = document.get("postcode").toString();
+                                state = document.get("state").toString();
+//                                location = document.get("location").toString();
+                                receiver_name = document.get("receiver_name").toString();
+                                receiver_tel = document.get("receiver_tel").toString();
+                                isDefault = document.get("default").toString();
+
+                                addresses.add(new Address(receiver_name, receiver_tel, addr1, addr2, city, postcode, state, isDefault));
+                                adapter.notifyItemChanged(addresses.size());
+                            }
+
+                        } else {
+                            Log.d(TAG, "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
+
+        addresses = new Vector<>();
+        adapter = new ChooseAddressAdapter(this, addresses);
+
+        binding.recAddressList.setLayoutManager(new LinearLayoutManager(this));
+        binding.recAddressList.setAdapter(adapter);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == 2)
+        {
+            if(resultCode == RESULT_OK)
+            {
+                refreshData();
+            }
+        }
+    }
 }
