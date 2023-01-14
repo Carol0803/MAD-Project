@@ -1,4 +1,4 @@
-package w2.g16.odds.product_browsing;
+package w2.g16.odds.browsing;
 
 import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
 
@@ -125,6 +125,7 @@ public class ViewCategoryActivity extends AppCompatActivity {
 //        https://stackoverflow.com/questions/16206629/using-comparable-for-multiple-dynamic-fields-of-vo-in-java
 
         binding.btnSortPrice.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onClick(View v) {
                 binding.btnSortPrice.setBackgroundColor(Color.parseColor("#FF4E457D"));
@@ -136,6 +137,11 @@ public class ViewCategoryActivity extends AppCompatActivity {
                 binding.lytPrice.setVisibility(View.VISIBLE);
                 binding.lytRating.setVisibility(View.GONE);
                 binding.rbHigh.setChecked(true);
+
+                Collections.sort(products,new PriceComparator().reversed());
+                adapterProduct = new ProductAdapter(ViewCategoryActivity.this, getLayoutInflater(), products);
+                binding.recProduct.setAdapter(adapterProduct);
+                binding.recProduct.setLayoutManager(new GridLayoutManager(getApplicationContext(), 2, RecyclerView.VERTICAL, false));
             }
         });
 

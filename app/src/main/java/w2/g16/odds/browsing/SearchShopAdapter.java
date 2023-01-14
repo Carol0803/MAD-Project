@@ -1,4 +1,4 @@
-package w2.g16.odds.product_browsing;
+package w2.g16.odds.browsing;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -8,24 +8,23 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import java.util.List;
 
 import w2.g16.odds.R;
-import w2.g16.odds.model.Products;
+import w2.g16.odds.model.Shop;
 
-public class SearchPorductAdapter extends ArrayAdapter<Products> {
+public class SearchShopAdapter extends ArrayAdapter<Shop> {
 
-    public SearchPorductAdapter(Context context, int resource, List<Products> productsList)
+    public SearchShopAdapter(Context context, int resource, List<Shop> shopList)
     {
-        super(context,resource,productsList);
+        super(context,resource,shopList);
     }
 
     @NonNull
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        Products product = getItem(position);
+        Shop shop = getItem(position);
 
         if(convertView == null)
         {
@@ -33,7 +32,7 @@ public class SearchPorductAdapter extends ArrayAdapter<Products> {
         }
 
         TextView tv = (TextView) convertView.findViewById(R.id.tvItemSearch);
-        tv.setText(product.getProduct_name());
+        tv.setText(shop.getShopname());
 
         return convertView;
     }

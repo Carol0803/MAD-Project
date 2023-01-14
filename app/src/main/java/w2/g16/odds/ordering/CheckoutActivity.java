@@ -249,7 +249,7 @@ public class CheckoutActivity extends AppCompatActivity {
 
             // Create a new instance of DatePickerDialog and return it
             DatePickerDialog datePickerDialog = new DatePickerDialog(requireContext(), this, year, month, day);
-            datePickerDialog.getDatePicker().setMinDate(c.getTimeInMillis());
+            datePickerDialog.getDatePicker().setMinDate(c.getTimeInMillis() + (1000*60*60*24*1));
             datePickerDialog.getDatePicker().setMaxDate(c.getTimeInMillis() + (1000*60*60*24*10));
             return datePickerDialog;
         }

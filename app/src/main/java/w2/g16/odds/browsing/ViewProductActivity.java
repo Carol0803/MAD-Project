@@ -1,13 +1,10 @@
-package w2.g16.odds.product_browsing;
-
-import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
+package w2.g16.odds.browsing;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -20,8 +17,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
 import com.squareup.picasso.Picasso;
 
@@ -31,7 +26,6 @@ import java.util.Map;
 
 import w2.g16.odds.R;
 import w2.g16.odds.databinding.ActivityViewProductBinding;
-import w2.g16.odds.model.Cart;
 import w2.g16.odds.model.UserEmail;
 import w2.g16.odds.ordering.CartActivity;
 

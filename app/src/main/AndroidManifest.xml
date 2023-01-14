@@ -24,6 +24,13 @@
                 android:value="" />
         </activity>
         <activity
+            android:name=".recommendation.RecommendationActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
             android:name=".setting.SettingsActivity"
             android:exported="true">
             <meta-data
@@ -108,7 +115,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".product_browsing.SearchActivity"
+            android:name=".browsing.SearchActivity"
             android:exported="false">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
@@ -119,21 +126,21 @@
                 android:resource="@xml/searchable" />
         </activity>
         <activity
-            android:name=".product_browsing.ViewCategoryActivity"
+            android:name=".browsing.ViewCategoryActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".product_browsing.ViewShopActivity"
+            android:name=".browsing.ViewShopActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".product_browsing.ViewProductActivity"
+            android:name=".browsing.ViewProductActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
@@ -218,20 +225,6 @@
         <activity
             android:name=".ordering.CartActivity"
             android:exported="true">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
-            android:name=".user_mgt.login"
-            android:exported="false">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
-            android:name=".shop_recommendation.shop_recommendation"
-            android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />

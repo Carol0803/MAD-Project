@@ -1,4 +1,4 @@
-package w2.g16.odds.product_browsing;
+package w2.g16.odds.browsing;
 
 import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
 

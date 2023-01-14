@@ -21,7 +21,7 @@ import w2.g16.odds.HomePage;
 import w2.g16.odds.MainActivity;
 import w2.g16.odds.R;
 import w2.g16.odds.ordering.OrderActivity;
-import w2.g16.odds.shop_recommendation.shop_recommendation;
+import w2.g16.odds.recommendation.RecommendationActivity;
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -56,7 +56,7 @@ public class SettingsActivity extends AppCompatActivity {
                         overridePendingTransition(0,0);
                         return true;
                     case R.id.recommendation:
-                        startActivity(new Intent(getApplicationContext(), shop_recommendation.class));
+                        startActivity(new Intent(getApplicationContext(), RecommendationActivity.class));
                         overridePendingTransition(0,0);
                         return true;
                     case R.id.order:

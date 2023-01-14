@@ -3,13 +3,9 @@ package w2.g16.odds.ordering;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -18,8 +14,6 @@ import android.view.View;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationBarView;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -31,9 +25,8 @@ import w2.g16.odds.R;
 import w2.g16.odds.databinding.ActivityOrderBinding;
 import w2.g16.odds.model.Order;
 import w2.g16.odds.model.UserEmail;
-import w2.g16.odds.product_browsing.ViewProductActivity;
+import w2.g16.odds.recommendation.RecommendationActivity;
 import w2.g16.odds.setting.SettingsActivity;
-import w2.g16.odds.shop_recommendation.shop_recommendation;
 
 public class OrderActivity extends AppCompatActivity {
 
@@ -73,7 +66,7 @@ public class OrderActivity extends AppCompatActivity {
                         overridePendingTransition(0,0);
                         return true;
                     case R.id.recommendation:
-                        startActivity(new Intent(getApplicationContext(), shop_recommendation.class));
+                        startActivity(new Intent(getApplicationContext(), RecommendationActivity.class));
                         overridePendingTransition(0,0);
                         return true;
                     case R.id.order:

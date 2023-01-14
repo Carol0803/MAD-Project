@@ -1,4 +1,4 @@
-package w2.g16.odds.product_browsing;
+package w2.g16.odds.browsing;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -307,8 +307,6 @@ public class SearchActivity extends AppCompatActivity {
                     binding.rbByProduct.setTextColor(Color.BLACK);
                     binding.rbByCategory.setBackgroundResource(R.drawable.rounded_rectangle_bg);
                     binding.rbByCategory.setTextColor(Color.BLACK);
-                    binding.rbByShop.setBackgroundResource(R.drawable.rounded_rectangle_bg);
-                    binding.rbByShop.setTextColor(Color.BLACK);
                     shopList = new ArrayList<>();
                     db.collection("shop")
                             .get()

@@ -7,7 +7,8 @@ public class Shop {
     private String shopID;
     private String shopname;
     private String tel_no;
-    private String operating_hour;
+    private String shop_open;
+    private String shop_close;
     private String addr1;
     private String addr2;
     private String city;
@@ -16,6 +17,8 @@ public class Shop {
     private String owner;
     private String rating;
     private List<Cart> cartList;
+    private String longitude;
+    private String latitude;
 
     public Shop(){}
 
@@ -30,17 +33,28 @@ public class Shop {
         this.cartList = cartList;
     }
 
-    public Shop(String shopID, String shopname, String tel_no, String operating_hour, String addr1, String addr2, String city, String postcode, String state, String owner, String rating) {
+    public Shop(String shopID, String shopname, String tel_no, String shop_open, String shop_close, String addr1, String addr2, String city, String postcode, String state, String owner, String rating, List<Cart> cartList, String longitude, String latitude) {
         this.shopID = shopID;
         this.shopname = shopname;
         this.tel_no = tel_no;
-        this.operating_hour = operating_hour;
+        this.shop_open = shop_open;
+        this.shop_close = shop_close;
         this.addr1 = addr1;
         this.addr2 = addr2;
         this.city = city;
         this.postcode = postcode;
         this.state = state;
         this.owner = owner;
+        this.rating = rating;
+        this.cartList = cartList;
+        this.longitude = longitude;
+        this.latitude = latitude;
+    }
+
+    public Shop(String shopname, String shop_open, String shop_close, String rating) {
+        this.shopname = shopname;
+        this.shop_open = shop_open;
+        this.shop_close = shop_close;
         this.rating = rating;
     }
 
@@ -66,14 +80,6 @@ public class Shop {
 
     public void setTel_no(String tel_no) {
         this.tel_no = tel_no;
-    }
-
-    public String getOperating_hour() {
-        return operating_hour;
-    }
-
-    public void setOperating_hour(String operating_hour) {
-        this.operating_hour = operating_hour;
     }
 
     public String getAddr1() {
@@ -150,5 +156,37 @@ public class Shop {
             return true;
 
         return false;
+    }
+
+    public String getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(String longitude) {
+        this.longitude = longitude;
+    }
+
+    public String getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(String latitude) {
+        this.latitude = latitude;
+    }
+
+    public String getShop_open() {
+        return shop_open;
+    }
+
+    public void setShop_open(String shop_open) {
+        this.shop_open = shop_open;
+    }
+
+    public String getShop_close() {
+        return shop_close;
+    }
+
+    public void setShop_close(String shop_close) {
+        this.shop_close = shop_close;
     }
 }
