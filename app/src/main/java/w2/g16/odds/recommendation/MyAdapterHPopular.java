@@ -1,10 +1,7 @@
 package w2.g16.odds.recommendation;
 
-import static android.content.ContentValues.TAG;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,12 +9,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
@@ -28,8 +19,6 @@ public class MyAdapterHPopular extends RecyclerView.Adapter<MyAdapterHPopular.My
 
     Context context;
     ArrayList <Shop> shopArrayList;
-    FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private int quantity = 0;
 
     public MyAdapterHPopular(Context context, ArrayList<Shop> shopArrayList) {
         this.context = context;
@@ -40,7 +29,7 @@ public class MyAdapterHPopular extends RecyclerView.Adapter<MyAdapterHPopular.My
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-        View v = LayoutInflater.from(context).inflate(R.layout.itemhorizontal,parent,false);
+        View v = LayoutInflater.from(context).inflate(R.layout.itempopular,parent,false);
 
         return new MyViewHolder(v);
     }
@@ -50,9 +39,9 @@ public class MyAdapterHPopular extends RecyclerView.Adapter<MyAdapterHPopular.My
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         Shop shop = shopArrayList.get(position);
 
-        holder.shop_name.setText(shop.getShopname());
+        holder.shop_name.setText(shop.getShop_name());
         holder.operation_time.setText(shop.getShop_open() + " - " + shop.getShop_close());
-        holder.sales.setText(shop.getRating());
+        holder.sales.setText(""+shop.getShop_rating());
     }
 
     @Override

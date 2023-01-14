@@ -22,19 +22,12 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import org.checkerframework.checker.units.qual.A;
-
-import java.sql.Array;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Vector;
 
-import w2.g16.odds.model.Cart;
 import w2.g16.odds.R;
 import w2.g16.odds.model.Order;
-import w2.g16.odds.model.Products;
 import w2.g16.odds.model.Shop;
 import w2.g16.odds.model.UserEmail;
 
@@ -177,7 +170,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
     @Override
     public void onBindViewHolder(@NonNull CartViewHolder holder, int position) {
         Shop shop = shops.get(position);
-        holder.tvShopname.setText(shop.getShopname());
+        holder.tvShopname.setText(shop.getShop_name());
 
 //        holder.recProduct.setHasFixedSize(false);
         holder.recProduct.setLayoutManager(new LinearLayoutManager(holder.itemView.getContext()));
@@ -195,7 +188,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
         if (selectedPosition==position){
             holder.checkBox.setChecked(true);
 
-            selected_shopname = shop.getShopname();
+            selected_shopname = shop.getShop_name();
             selected_shopID = shop.getShopID();
             email = UserEmail.getEmail(activity.getApplicationContext());
 

@@ -72,7 +72,9 @@ public class RecommendationActivity extends AppCompatActivity {
     private String email;
     private int quantity = 0;
     private double dist;
+    private int count = 0;
     GpsTracker gpsTracker;
+    ArrayList<Order> orders = new ArrayList<Order>();
 
     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -92,7 +94,7 @@ public class RecommendationActivity extends AppCompatActivity {
         });
 
         btmNav = findViewById(R.id.btm_nav);
-        btmNav.setSelectedItemId(com.google.android.material.R.id.home);
+        btmNav.setSelectedItemId(R.id.recommendation);
         btmNav.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -124,8 +126,8 @@ public class RecommendationActivity extends AppCompatActivity {
         progressDialog.setMessage("Fetching Data.....");
         progressDialog.show();
 
-        recyclerView = findViewById(R.id.recyclerview);
-        shopPopular();
+//        recyclerView = findViewById(R.id.recyclerview);
+//        shopPopular();
 
         ratingRecyclerview = findViewById(R.id.recyclerview2);
         shopRating();
@@ -133,19 +135,19 @@ public class RecommendationActivity extends AppCompatActivity {
         nearbyRecyclerview = findViewById(R.id.recyclerview3);
         shopNearby();
 
-        seePopular = findViewById(R.id.tvseemore);
-        seePopular.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                seeMore();
-            }
-        });
+//        seePopular = findViewById(R.id.tvseemore);
+//        seePopular.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                seeMore();
+//            }
+//        });
 
         seeRating = findViewById(R.id.tvseerating);
         seeRating.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                seeMore();
+                seeMoreRating();
             }
         });
 
@@ -153,16 +155,16 @@ public class RecommendationActivity extends AppCompatActivity {
         seeDistance.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                seeMore();
+                seeMoreDistance();
             }
         });
     }
+/*
 
     private void shopPopular() {
 //        recyclerView.setHasFixedSize(true);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false);
         recyclerView.setLayoutManager(layoutManager);
-
         shopArrayList = new ArrayList<Shop>();
         myAdapter = new MyAdapterHPopular(getApplicationContext(), shopArrayList);
         recyclerView.setAdapter(myAdapter);
@@ -179,12 +181,14 @@ public class RecommendationActivity extends AppCompatActivity {
                                 shops.add(document.getId());
                             }
 
-                            ArrayList<String> order_lists = new ArrayList<String>();
-                            ArrayList<Order> orders = new ArrayList<Order>();
-                            for(String shop : shops)
+                            for(int i = 0; i < shops.size(); i++)
                             {
+                                String shop = shops.get(i);
+                                ArrayList<String> order_lists = new ArrayList<String>();
+                                int finalI = i;
+                                int finalI1 = i;
                                 db.collection("order")
-                                        .whereEqualTo("order_from", shop)
+                                        .whereEqualTo("order_from", shops.get(i))
                                         .get()
                                         .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                                             @RequiresApi(api = Build.VERSION_CODES.N)
@@ -197,8 +201,10 @@ public class RecommendationActivity extends AppCompatActivity {
                                                         order_lists.add(document.getId());
                                                     }
 
-                                                    for (String order_list : order_lists) {
-                                                        db.collection("order").document(order_list)
+                                                    for (int j = 0; j < order_lists.size(); j++)
+                                                    {
+                                                        String order_list = order_lists.get(j);
+                                                        db.collection("order").document(order_lists.get(j))
                                                                 .collection("ordered_product")
                                                                 .get()
                                                                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -210,19 +216,21 @@ public class RecommendationActivity extends AppCompatActivity {
 
                                                                                 quantity += Integer.parseInt(document.get("quantity").toString());
                                                                             }
-
-                                                                            orders.add(new Order(shop, "" + quantity));
-
                                                                         } else {
                                                                             Log.d(TAG, "Error getting documents: ", task.getException());
                                                                         }
                                                                     }
                                                                 });
                                                     }
+                                                    orders.add(new Order(shop, "" + quantity));
 
-                                                    sort(orders);
+                                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                                                        sort(orders);
+                                                    }
 
-                                                    for(Order order : orders) {
+                                                    for(int i = 0; i < orders.size(); i++)
+                                                    {
+                                                        Order order = orders.get(i);
                                                         DocumentReference docRef = db.collection("shop").document(order.getShopname());
                                                         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                                                             @Override
@@ -233,8 +241,8 @@ public class RecommendationActivity extends AppCompatActivity {
                                                                         Log.d(TAG, "DocumentSnapshot data: " + document.getData());
 
                                                                         String shopname = document.get("shop_name").toString();
-                                                                        String shop_open = document.get("shop_name").toString();
-                                                                        String shop_close = document.get("shop_name").toString();
+                                                                        String shop_open = document.get("shop_open").toString();
+                                                                        String shop_close = document.get("shop_close").toString();
                                                                         String item_sold = order.getQuantity();
 
                                                                         shopArrayList.add(new Shop(shopname, shop_open, shop_close, item_sold));
@@ -248,27 +256,28 @@ public class RecommendationActivity extends AppCompatActivity {
                                                                     }
                                                                 } else {
                                                                     Log.d(TAG, "get failed with ", task.getException());
-                                                                    if (progressDialog.isShowing())
-                                                                        progressDialog.dismiss();
-                                                                    return;
                                                                 }
                                                             }
                                                         });
                                                     }
+
+                                                    shops.remove(shop);
                                                 }
-                                                    else{
-                                                        Log.d(TAG, "Error getting documents: ", task.getException());
-                                                    }
+                                                else{
+                                                    Log.d(TAG, "Error getting documents: ", task.getException());
                                                 }
+                                            }
                                         });
                             }
-
                         } else {
                             Log.d(TAG, "Error getting documents: ", task.getException());
                         }
+
+
                     }
                 });
     }
+*/
 
     private void shopRating() {
 //        recyclerView.setHasFixedSize(true);
@@ -279,7 +288,7 @@ public class RecommendationActivity extends AppCompatActivity {
         myAdapterHRating = new MyAdapterHRating(getApplicationContext(), shopArrayList2);
         ratingRecyclerview.setAdapter(myAdapterHRating);
 
-        /*db.collection("shop").limit(3).whereGreaterThanOrEqualTo("shop_rating", 4.5)
+        db.collection("shop").limit(3).whereGreaterThanOrEqualTo("shop_rating", 4.5)
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
@@ -297,7 +306,9 @@ public class RecommendationActivity extends AppCompatActivity {
                         {
                             if(dc.getType() == DocumentChange.Type.ADDED)
                             {
-                                shopArrayList2.add(dc.getDocument().toObject(Shop.class));
+                                Shop shop = dc.getDocument().toObject(Shop.class);
+                                shop.setShopID(dc.getDocument().getId());
+                                shopArrayList2.add(shop);
                             }
 
                             myAdapterHRating.notifyDataSetChanged();
@@ -305,8 +316,8 @@ public class RecommendationActivity extends AppCompatActivity {
                                 progressDialog.dismiss();
                         }
                     }
-                });*/
-
+                });
+/*
         db.collection("shop")
                 .limit(3)
                 .whereGreaterThanOrEqualTo("shop_rating", 4.5)
@@ -331,17 +342,16 @@ public class RecommendationActivity extends AppCompatActivity {
                             Log.d(TAG, "Error getting documents: ", task.getException());
                         }
                     }
-                });
+                });*/
     }
 
     private void shopNearby() {
 //        nearbyRecyclerview.setHasFixedSize(true);
         LinearLayoutManager layoutManager3 = new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false);
-        nearbyRecyclerview.setLayoutManager(layoutManager3);
-
         shopArrayList3 = new ArrayList<>();
         myAdapterDistance = new MyAdapterHDistance(getApplicationContext(), shopArrayList3);
         nearbyRecyclerview.setAdapter(myAdapterDistance);
+        nearbyRecyclerview.setLayoutManager(layoutManager3);
 
         /*db.collection("shop").orderBy("shop_rating", Query.Direction.DESCENDING).limit(3)
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
@@ -373,7 +383,6 @@ public class RecommendationActivity extends AppCompatActivity {
 
         gpsTracker = new GpsTracker(RecommendationActivity.this);
         if(gpsTracker.canGetLocation()) {
-
             db.collection("shop")
                     .get()
                     .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -383,9 +392,8 @@ public class RecommendationActivity extends AppCompatActivity {
                                 for (QueryDocumentSnapshot document : task.getResult()) {
                                     Log.d(TAG, document.getId() + " => " + document.getData());
 
-                                    String shopname = document.get("shop_name").toString();
-                                    String shop_open = document.get("shop_open").toString();
-                                    String shop_close = document.get("shop_close").toString();
+                                    if(progressDialog.isShowing())
+                                        progressDialog.dismiss();
 
                                     double lat1 = Double.parseDouble(document.get("shop_latitude").toString());
                                     double lon1 = Double.parseDouble(document.get("shop_longitude").toString());
@@ -413,11 +421,17 @@ public class RecommendationActivity extends AppCompatActivity {
                                     dist = Math.round(dist * Math.pow(10, n))
                                             / Math.pow(10, n);
 
-                                    //display products that owned by shop in 50km radius from user
-                                    if (dist <= 10) {
-                                        shopArrayList3.add(new Shop(shopname, shop_open, shop_close, ""+dist));
-                                        myAdapter.notifyItemInserted(shopArrayList3.size());
+                                    if (dist <= 10 && shopArrayList3.size()<3) {
+                                        String shopID = document.getId();
+                                        String shopname = document.get("shop_name").toString();
+                                        String shop_open = document.get("shop_open").toString();
+                                        String shop_close = document.get("shop_close").toString();
+
+                                        shopArrayList3.add(new Shop(shopID, shopname, shop_open, shop_close, dist));
+                                        myAdapterDistance.notifyItemInserted(shopArrayList3.size());
                                     }
+                                    else
+                                        break;
                                 }
                             } else {
                                 Log.d(TAG, "Error getting documents: ", task.getException());
@@ -426,6 +440,9 @@ public class RecommendationActivity extends AppCompatActivity {
                     });
         }
         else{
+            if(progressDialog.isShowing())
+                progressDialog.dismiss();
+
             tvNoGps = findViewById(R.id.tvNoGps);
             tvNoGps.setVisibility(View.VISIBLE);
 
@@ -433,10 +450,16 @@ public class RecommendationActivity extends AppCompatActivity {
         }
     }
 
-    private void seeMore()
+    private void seeMoreRating()
     {
-//        Intent intent = new Intent(RecommendationActivity.this, SeeMorePopular.class);
-//        startActivity(intent);
+        Intent intent = new Intent(RecommendationActivity.this, SeeMoreRating.class);
+        startActivity(intent);
+    }
+
+    private void seeMoreDistance()
+    {
+        Intent intent = new Intent(RecommendationActivity.this, SeeMoreDistance.class);
+        startActivity(intent);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)

@@ -45,7 +45,7 @@ public class SettingsActivity extends AppCompatActivity {
         });
 
         btmNav = findViewById(R.id.btm_nav);
-        btmNav.setSelectedItemId(com.google.android.material.R.id.home);
+        btmNav.setSelectedItemId(R.id.profile);
         btmNav.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {

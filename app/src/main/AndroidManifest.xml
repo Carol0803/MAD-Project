@@ -24,6 +24,20 @@
                 android:value="" />
         </activity>
         <activity
+            android:name=".recommendation.SeeMoreDistance"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".recommendation.SeeMoreRating"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
             android:name=".recommendation.RecommendationActivity"
             android:exported="false">
             <meta-data

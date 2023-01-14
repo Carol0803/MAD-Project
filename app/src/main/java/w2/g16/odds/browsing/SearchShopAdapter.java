@@ -32,7 +32,7 @@ public class SearchShopAdapter extends ArrayAdapter<Shop> {
         }
 
         TextView tv = (TextView) convertView.findViewById(R.id.tvItemSearch);
-        tv.setText(shop.getShopname());
+        tv.setText(shop.getShop_name());
 
         return convertView;
     }

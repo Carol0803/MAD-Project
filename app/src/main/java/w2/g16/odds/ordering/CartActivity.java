@@ -6,7 +6,6 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -152,7 +151,7 @@ public class CartActivity extends AppCompatActivity {
                                 String shopname = document.get("shop_name").toString();
 
                                 shop.setShopID(shopID);
-                                shop.setShopname(shopname);
+                                shop.setShop_name(shopname);
 
 //                                ArrayList<Cart> carts = new ArrayList<Cart>();
 //                                carts = readCartProduct(shopID);
@@ -165,7 +164,7 @@ public class CartActivity extends AppCompatActivity {
                         for(int i=0; i<shops.size(); i++) {
 
                             String shop_id = shops.get(i).getShopID();
-                            String shop_name = shops.get(i).getShopname();
+                            String shop_name = shops.get(i).getShop_name();
 
                             List<Cart> carts = new ArrayList<Cart>();
                             shop_list = new ArrayList<Shop>();
@@ -201,7 +200,7 @@ public class CartActivity extends AppCompatActivity {
                                                 Shop shop = new Shop();
 
                                                 shop.setShopID(shop_id);
-                                                shop.setShopname(shop_name);
+                                                shop.setShop_name(shop_name);
                                                 shop.setCartList(carts);
 //                                                shop_list.clear();
                                                 shop_list.add(shop);

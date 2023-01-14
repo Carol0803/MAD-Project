@@ -5,7 +5,7 @@ import java.util.List;
 public class Shop {
 
     private String shopID;
-    private String shopname;
+    private String shop_name;
     private String tel_no;
     private String shop_open;
     private String shop_close;
@@ -15,7 +15,7 @@ public class Shop {
     private String postcode;
     private String state;
     private String owner;
-    private String rating;
+    private double shop_rating;
     private List<Cart> cartList;
     private String longitude;
     private String latitude;
@@ -24,18 +24,18 @@ public class Shop {
 
     public Shop(String shopID, String shopname) {
         this.shopID = shopID;
-        this.shopname = shopname;
+        this.shop_name = shopname;
     }
 
     public Shop(String shopID, String shopname, List<Cart> cartList) {
         this.shopID = shopID;
-        this.shopname = shopname;
+        this.shop_name = shopname;
         this.cartList = cartList;
     }
 
-    public Shop(String shopID, String shopname, String tel_no, String shop_open, String shop_close, String addr1, String addr2, String city, String postcode, String state, String owner, String rating, List<Cart> cartList, String longitude, String latitude) {
+    public Shop(String shopID, String shopname, String tel_no, String shop_open, String shop_close, String addr1, String addr2, String city, String postcode, String state, String owner, double rating, List<Cart> cartList, String longitude, String latitude) {
         this.shopID = shopID;
-        this.shopname = shopname;
+        this.shop_name = shopname;
         this.tel_no = tel_no;
         this.shop_open = shop_open;
         this.shop_close = shop_close;
@@ -45,17 +45,18 @@ public class Shop {
         this.postcode = postcode;
         this.state = state;
         this.owner = owner;
-        this.rating = rating;
+        this.shop_rating = rating;
         this.cartList = cartList;
         this.longitude = longitude;
         this.latitude = latitude;
     }
 
-    public Shop(String shopname, String shop_open, String shop_close, String rating) {
-        this.shopname = shopname;
+    public Shop(String shopID, String shopname, String shop_open, String shop_close, double rating) {
+        this.shopID = shopID;
+        this.shop_name = shopname;
         this.shop_open = shop_open;
         this.shop_close = shop_close;
-        this.rating = rating;
+        this.shop_rating = rating;
     }
 
     public String getShopID() {
@@ -66,12 +67,12 @@ public class Shop {
         this.shopID = shopID;
     }
 
-    public String getShopname() {
-        return shopname;
+    public String getShop_name() {
+        return shop_name;
     }
 
-    public void setShopname(String shop_name) {
-        this.shopname = shop_name;
+    public void setShop_name(String shop_name) {
+        this.shop_name = shop_name;
     }
 
     public String getTel_no() {
@@ -130,12 +131,12 @@ public class Shop {
         this.owner = owner;
     }
 
-    public String getRating() {
-        return rating;
+    public double getShop_rating() {
+        return shop_rating;
     }
 
-    public void setRating(String rating) {
-        this.rating = rating;
+    public void setShop_rating(double shop_rating) {
+        this.shop_rating = shop_rating;
     }
 
     public List<Cart> getCartList() {
@@ -152,7 +153,7 @@ public class Shop {
             return false;
 
         Shop itemCompare = (Shop) obj;
-        if(itemCompare.getShopname().equals(this.getShopname()))
+        if(itemCompare.getShop_name().equals(this.getShop_name()))
             return true;
 
         return false;

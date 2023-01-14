@@ -135,7 +135,7 @@ public class SearchActivity extends AppCompatActivity {
                     ArrayList<Shop> filteredShop = new ArrayList<Shop>();
 
                     for (Shop shop : shopList) {
-                        if (shop.getShopname().toLowerCase().contains(newText.toLowerCase()))
+                        if (shop.getShop_name().toLowerCase().contains(newText.toLowerCase()))
                             filteredShop.add(shop);
                         else{
                             Toast toast = Toast.makeText(getApplicationContext(), "Could not find this shop.", Toast.LENGTH_SHORT);
@@ -203,7 +203,7 @@ public class SearchActivity extends AppCompatActivity {
                     ArrayList<Shop> filteredShop = new ArrayList<Shop>();
 
                     for (Shop shop : shopList) {
-                        if (shop.getShopname().toLowerCase().contains(newText.toLowerCase()))
+                        if (shop.getShop_name().toLowerCase().contains(newText.toLowerCase()))
                             filteredShop.add(shop);
                     }
                     binding.listSearch.setVisibility(View.VISIBLE);

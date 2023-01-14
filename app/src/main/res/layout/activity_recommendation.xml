@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="?attr/colorOnBackground"
     tools:context=".recommendation.RecommendationActivity">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -81,6 +82,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_weight="1"
+                        android:paddingStart="20dp"
                         android:fontFamily="@font/league_gothic"
                         android:text="NEARBY"
                         android:textColor="@color/black"
@@ -92,12 +94,12 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="60dp"
-                        android:backgroundTint="@color/white"
+                        android:backgroundTint="?attr/colorOnBackground"
                         android:fontFamily="@font/belleza"
                         android:gravity="right|center"
                         android:text="See More >>"
                         android:textAllCaps="false"
-                        android:textColor="#808080"
+                        android:textColor="?attr/colorPrimary"
                         android:textSize="10sp" />
                 </LinearLayout>
 
@@ -105,22 +107,24 @@
                     android:id="@+id/tvNoGps"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginVertical="10dp"
-                    android:text="Couldn't find nearby shops. Location is disabled."
+                    android:paddingVertical="10dp"
+                    android:text="Couldn't find nearby shops. \nLocation is disabled."
                     android:gravity="center"
                     android:fontFamily="@font/belleza"
                     android:textAllCaps="false"
                     android:textColor="@color/black"
-                    android:textSize="10sp"
-                    android:visibility="gone"/>
+                    android:textSize="15sp"
+                    android:visibility="gone"
+                    android:background="@color/white"/>
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recyclerview3"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"/>
             </LinearLayout>
 
-            <!--    Popular Recommendation-->
+            <!--&lt;!&ndash;    Popular Recommendation&ndash;&gt;
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -138,6 +142,7 @@
                         android:layout_width="409dp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
+                        android:paddingStart="20dp"
                         android:layout_weight="1"
                         android:fontFamily="@font/league_gothic"
                         android:text="POPULARITY"
@@ -150,7 +155,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="60dp"
-                        android:backgroundTint="@color/white"
+                        android:backgroundTint="?attr/colorOnBackground"
                         android:fontFamily="@font/belleza"
                         android:gravity="right|center"
                         android:text="See More >>"
@@ -163,8 +168,10 @@
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recyclerview"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-            </LinearLayout>
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"/>
+
+            </LinearLayout>-->
 
             <!--    Rating Recommendation-->
             <LinearLayout
@@ -184,6 +191,7 @@
                         android:layout_width="409dp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
+                        android:paddingStart="20dp"
                         android:layout_weight="1"
                         android:fontFamily="@font/league_gothic"
                         android:text="RATING"
@@ -196,12 +204,12 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="60dp"
-                        android:backgroundTint="@color/white"
+                        android:backgroundTint="?attr/colorOnBackground"
                         android:fontFamily="@font/belleza"
                         android:gravity="right|center"
                         android:text="See More >>"
                         android:textAllCaps="false"
-                        android:textColor="#808080"
+                        android:textColor="?attr/colorPrimary"
                         android:textSize="10sp" />
 
                 </LinearLayout>
@@ -209,7 +217,8 @@
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recyclerview2"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp" />
             </LinearLayout>
 
 
