@@ -92,6 +92,7 @@ public class ViewPurchaseHistoryActivity extends AppCompatActivity {
                         Date delivery_time = timestamp2.toDate();
                         total = document.get("order_amount").toString();
                         binding.tvTotal.setText(total);
+                        binding.tvPaymentMethod.setText(document.get("payment_method").toString());
 
                     } else {
                         Log.d(TAG, "No such document");

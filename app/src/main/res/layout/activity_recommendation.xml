@@ -100,7 +100,7 @@
                         android:text="See More >>"
                         android:textAllCaps="false"
                         android:textColor="?attr/colorPrimary"
-                        android:textSize="10sp" />
+                        android:textSize="14sp" />
                 </LinearLayout>
 
                 <TextView
@@ -120,7 +120,7 @@
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recyclerview3"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_marginBottom="20dp"/>
             </LinearLayout>
 
@@ -210,14 +210,14 @@
                         android:text="See More >>"
                         android:textAllCaps="false"
                         android:textColor="?attr/colorPrimary"
-                        android:textSize="10sp" />
+                        android:textSize="14sp" />
 
                 </LinearLayout>
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recyclerview2"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_marginBottom="20dp" />
             </LinearLayout>
 

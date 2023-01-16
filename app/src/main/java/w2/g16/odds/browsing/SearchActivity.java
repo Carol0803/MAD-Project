@@ -65,6 +65,7 @@ public class SearchActivity extends AppCompatActivity {
         binding.rbByProduct.setBackgroundResource(R.drawable.rounded_rectangle_bg_checked);
         binding.rbByProduct.setTextColor(Color.WHITE);
 
+        productList = new ArrayList<>();
         db.collection("products")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -262,6 +263,8 @@ public class SearchActivity extends AppCompatActivity {
                     binding.rbByProduct.setTextColor(Color.WHITE);
                     binding.rbByCategory.setBackgroundResource(R.drawable.rounded_rectangle_bg);
                     binding.rbByCategory.setTextColor(Color.BLACK);
+                    binding.rbByShop.setBackgroundResource(R.drawable.rounded_rectangle_bg);
+                    binding.rbByShop.setTextColor(Color.BLACK);
                     productList = new ArrayList<>();
                     db.collection("products")
                             .get()

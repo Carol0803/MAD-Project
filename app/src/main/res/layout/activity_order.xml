@@ -44,21 +44,6 @@
                 app:layout_constraintStart_toStartOf="@id/toolbar"
                 app:layout_constraintTop_toTopOf="@id/toolbar" />
 
-            <TextView
-                android:id="@+id/tvHistory"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:autoLink="all"
-                android:fontFamily="@font/belleza"
-                android:paddingEnd="110dp"
-                android:text="History"
-                android:textColor="@color/white"
-                android:textSize="17sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="@id/toolbar"
-                app:layout_constraintStart_toEndOf="@id/tvOrder"
-                app:layout_constraintTop_toTopOf="parent" />
-
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -74,6 +59,34 @@
         android:paddingBottom="46dp">
 
     </androidx.recyclerview.widget.RecyclerView>
+
+    <TextView
+        android:id="@+id/historytv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="-8dp"
+        android:paddingBottom="33dp"
+        android:text="History"
+        android:fontFamily="@font/belleza"
+        android:textSize="17sp"
+        android:layout_toStartOf="@id/fabCart"
+        android:layout_above="@id/btm_nav"/>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabCart"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/btm_nav"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginBottom="15dp"
+        android:clickable="true"
+        android:onClick="fnGoCart"
+        app:backgroundTint="?attr/colorPrimary"
+        app:srcCompat="@drawable/ic_purchase_history"
+        app:tint="@null" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:layout_width="match_parent"

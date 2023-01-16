@@ -156,7 +156,7 @@ public class OrderActivity extends AppCompatActivity {
                     }
                 });
 
-        binding.tvHistory.setOnClickListener(new View.OnClickListener() {
+        binding.fabCart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), PurchaseHistoryActivity.class);

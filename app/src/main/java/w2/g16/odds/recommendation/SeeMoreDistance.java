@@ -185,7 +185,7 @@ public class SeeMoreDistance extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_seemorerating);
+        setContentView(R.layout.activity_seemoredistance);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -210,10 +210,10 @@ public class SeeMoreDistance extends AppCompatActivity {
         shopArrayList = new ArrayList<Shop>();
         myAdapter = new MyAdapterHDistance(this, shopArrayList);
         recyclerView.setAdapter(myAdapter);
-        showRating();
+        showNearby();
     }
 
-    private void showRating() {
+    private void showNearby() {
 
         GpsTracker gpsTracker = new GpsTracker(SeeMoreDistance.this);
         if(gpsTracker.canGetLocation()) {

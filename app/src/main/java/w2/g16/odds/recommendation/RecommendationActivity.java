@@ -346,12 +346,13 @@ public class RecommendationActivity extends AppCompatActivity {
     }
 
     private void shopNearby() {
-//        nearbyRecyclerview.setHasFixedSize(true);
+//        nearbyRecyclerview.setHasFixedSize(false);
         LinearLayoutManager layoutManager3 = new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false);
-        shopArrayList3 = new ArrayList<>();
+        nearbyRecyclerview.setLayoutManager(layoutManager3);
+
+        shopArrayList3 = new ArrayList<Shop>();
         myAdapterDistance = new MyAdapterHDistance(getApplicationContext(), shopArrayList3);
         nearbyRecyclerview.setAdapter(myAdapterDistance);
-        nearbyRecyclerview.setLayoutManager(layoutManager3);
 
         /*db.collection("shop").orderBy("shop_rating", Query.Direction.DESCENDING).limit(3)
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {

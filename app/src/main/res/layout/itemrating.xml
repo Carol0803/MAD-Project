@@ -18,7 +18,7 @@
         android:layout_marginRight="20dp">
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingHorizontal="30dp"
             android:paddingVertical="10dp"
@@ -31,7 +31,7 @@
                         android:layout_marginStart="8dp"
                         android:text="Shop Name"
                         android:textColor="@color/black"
-                        android:textSize="20dp"
+                        android:textSize="17dp"
                         android:textStyle="bold"/>
 
                     <LinearLayout
@@ -45,8 +45,7 @@
                             android:layout_marginStart="8dp"
                             android:text="Operation Time: "
                             android:textColor="@color/black"
-                            android:textSize="16dp"
-                            android:textStyle="bold" />
+                            android:textSize="16dp" />
 
                         <TextView
                             android:id="@+id/tvoperationtime"
@@ -68,8 +67,7 @@
                             android:layout_marginStart="8dp"
                             android:text="Rating: "
                             android:textColor="@color/black"
-                            android:textSize="16dp"
-                            android:textStyle="bold"/>
+                            android:textSize="16dp"/>
 
 
                         <TextView
@@ -81,6 +79,16 @@
                             android:textColor="@color/black" />
                     </LinearLayout>
 
+            <TextView
+                android:id="@+id/view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="5dp"
+                android:gravity="right"
+                android:fontFamily="@font/belleza"
+                android:text="View Shop>>"
+                android:textColor="@color/black"
+                android:textSize="13dp"/>
         </LinearLayout>
 
         <!--<LinearLayout

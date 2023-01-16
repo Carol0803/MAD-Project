@@ -161,6 +161,30 @@
                         android:textColor="@color/black"
                         android:textSize="16sp" />
                 </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/belleza"
+                        android:text="Payment Method: "
+                        android:textColor="@color/black"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tvPaymentMethod"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/belleza"
+                        android:paddingStart="10dp"
+                        android:text="paymentmethod"
+                        android:textColor="@color/black"
+                        android:textSize="16sp" />
+                </TableRow>
             </TableLayout>
 
             <View

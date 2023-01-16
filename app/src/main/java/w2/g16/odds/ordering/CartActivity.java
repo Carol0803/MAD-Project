@@ -13,6 +13,7 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -222,12 +223,16 @@ public class CartActivity extends AppCompatActivity {
     }
 
     public void fnCheckout(View view) {
-        Intent intent = new Intent(this, CheckoutActivity.class);
-        intent.putExtra("shopname", selected_order_shopname);
-        intent.putExtra("shopID", selected_order_shopID);
-        intent.putExtra("order", orders);
-        intent.putExtra("total", total);
-        startActivity(intent);
+        if(!binding.tvTotalAmount.getText().equals("RM 0.00")) {
+            Intent intent = new Intent(this, CheckoutActivity.class);
+            intent.putExtra("shopname", selected_order_shopname);
+            intent.putExtra("shopID", selected_order_shopID);
+            intent.putExtra("order", orders);
+            intent.putExtra("total", total);
+            startActivity(intent);
+        }
+        else
+            Toast.makeText(this, "Please select item to checkout.", Toast.LENGTH_SHORT).show();
     }
 
     public BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
