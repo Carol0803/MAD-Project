@@ -27,11 +27,14 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.Collections;
 import java.util.Vector;
 
+import w2.g16.odds.GpsTracker;
+import w2.g16.odds.MainActivity;
 import w2.g16.odds.R;
 import w2.g16.odds.databinding.ActivityViewCategoryBinding;
 import w2.g16.odds.model.PriceComparator;
 import w2.g16.odds.model.Products;
 import w2.g16.odds.model.RatingComparator;
+import w2.g16.odds.model.UserEmail;
 
 public class ViewCategoryActivity extends AppCompatActivity {
 
@@ -40,8 +43,10 @@ public class ViewCategoryActivity extends AppCompatActivity {
     private Vector<Products> products;
     private Vector<Products> rated_products;
     private ProductAdapter adapterProduct;
+    private double dist;
+    private String email;
+    GpsTracker gpsTracker;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +63,8 @@ public class ViewCategoryActivity extends AppCompatActivity {
                 onBackPressed();
             }
         });
+
+        email = UserEmail.getEmail(getApplicationContext());
 
         Intent intent = getIntent();
         categoryID = intent.getStringExtra("category_ID");
@@ -106,9 +113,105 @@ public class ViewCategoryActivity extends AppCompatActivity {
                                 double rating = Double.parseDouble(document.get("product_rating").toString());
                                 double price = Double.parseDouble(document.get("price").toString());
                                 int sold_item = Integer.parseInt(document.get("sold_item").toString());
+                                String shopID = document.get("owned by").toString();
 
-                                products.add(new Products(SKU, name, img, price, null, sold_item, rating));
-                                adapterProduct.notifyItemInserted(products.size());
+                                gpsTracker = new GpsTracker(ViewCategoryActivity.this);
+                                if(gpsTracker.canGetLocation()) {
+
+                                    DocumentReference docRef = db.collection("shop").document(shopID);
+                                    docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                            if (task.isSuccessful()) {
+                                                DocumentSnapshot document = task.getResult();
+                                                if (document.exists()) {
+
+                                                    double lat1 = Double.parseDouble(document.get("shop_latitude").toString());
+                                                    double lon1 = Double.parseDouble(document.get("shop_longitude").toString());
+
+                                                    double lat2 = gpsTracker.getLatitude();
+                                                    double lon2 = gpsTracker.getLongitude();
+
+                                                    // distance between latitudes and longitudes
+                                                    double dLat = Math.toRadians(lat2 - lat1);
+                                                    double dLon = Math.toRadians(lon2 - lon1);
+
+                                                    // convert to radians
+                                                    lat1 = Math.toRadians(lat1);
+                                                    lat2 = Math.toRadians(lat2);
+
+                                                    // apply formulae
+                                                    double a = Math.pow(Math.sin(dLat / 2), 2) +
+                                                            Math.pow(Math.sin(dLon / 2), 2) *
+                                                                    Math.cos(lat1) *
+                                                                    Math.cos(lat2);
+                                                    double rad = 6371;
+                                                    double c = 2 * Math.asin(Math.sqrt(a));
+                                                    dist = (rad * c);
+                                                    int n = 3;
+                                                    dist = Math.round(dist * Math.pow(10, n))
+                                                            / Math.pow(10, n);
+
+                                                    //display products that owned by shop in 50km radius from user
+                                                    if (dist <= 50) {
+                                                        products.add(new Products(SKU, name, img, price, shopID, sold_item, rating));
+                                                        adapterProduct.notifyItemInserted(products.size());
+                                                    }
+
+                                                } else {
+                                                    Log.d(TAG, "No such document");
+                                                }
+                                            } else {
+                                                Log.d(TAG, "get failed with ", task.getException());
+                                            }
+                                        }
+                                    });
+                                }
+                                else{
+                                    DocumentReference docRef = db.collection("shop").document(shopID);
+                                    docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                            if (task.isSuccessful()) {
+                                                DocumentSnapshot document = task.getResult();
+                                                if (document.exists()) {
+
+                                                    String shop_state = document.get("shop_state").toString();
+
+                                                    DocumentReference docRef = db.collection("customer").document(email)
+                                                            .collection("address").document("001");
+                                                    docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                                        @Override
+                                                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                            if (task.isSuccessful()) {
+                                                                DocumentSnapshot document = task.getResult();
+                                                                if (document.exists()) {
+
+                                                                    String state = document.get("state").toString();
+
+                                                                    if(state.equals(shop_state)) {
+                                                                        products.add(new Products(SKU, name, img, price, shopID, sold_item, rating));
+                                                                        adapterProduct.notifyItemInserted(products.size());
+                                                                    }
+
+                                                                } else {
+                                                                    Log.d(TAG, "No such document");
+                                                                }
+                                                            } else {
+                                                                Log.d(TAG, "get failed with ", task.getException());
+                                                            }
+                                                        }
+                                                    });
+
+                                                } else {
+                                                    Log.d(TAG, "No such document");
+                                                }
+                                            } else {
+                                                Log.d(TAG, "get failed with ", task.getException());
+                                            }
+                                        }
+                                    });
+                                }
                             }
                             Collections.sort(products,new PriceComparator().reversed());
                         } else {
@@ -122,7 +225,6 @@ public class ViewCategoryActivity extends AppCompatActivity {
 
         binding.recProduct.setAdapter(adapterProduct);
         binding.recProduct.setLayoutManager(new GridLayoutManager(this, 2, RecyclerView.VERTICAL, false));
-//        https://stackoverflow.com/questions/16206629/using-comparable-for-multiple-dynamic-fields-of-vo-in-java
 
         binding.btnSortPrice.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.N)

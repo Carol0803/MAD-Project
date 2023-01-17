@@ -18,6 +18,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.helper.widget.MotionEffect;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -40,6 +41,8 @@ import java.util.ArrayList;
 import w2.g16.odds.GpsTracker;
 import w2.g16.odds.MainActivity;
 import w2.g16.odds.R;
+import w2.g16.odds.browsing.SearchActivity;
+import w2.g16.odds.browsing.ViewCategoryActivity;
 import w2.g16.odds.model.Order;
 import w2.g16.odds.model.Products;
 import w2.g16.odds.model.Shop;
@@ -73,6 +76,7 @@ public class RecommendationActivity extends AppCompatActivity {
     private int quantity = 0;
     private double dist;
     private int count = 0;
+    private String state2;
     GpsTracker gpsTracker;
     ArrayList<Order> orders = new ArrayList<Order>();
 
@@ -90,6 +94,28 @@ public class RecommendationActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 onBackPressed();
+            }
+        });
+
+        email = UserEmail.getEmail(getApplicationContext());
+
+        DocumentReference docRef = db.collection("customer").document(email)
+                .collection("address").document("001");
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document2 = task.getResult();
+                    if (document2.exists()) {
+
+                        state2 = document2.get("state").toString();
+
+                    } else {
+                        Log.d(TAG, "No such document");
+                    }
+                } else {
+                    Log.d(TAG, "get failed with ", task.getException());
+                }
             }
         });
 
@@ -118,8 +144,6 @@ public class RecommendationActivity extends AppCompatActivity {
                 return false;
             }
         });
-
-        email = UserEmail.getEmail(getApplicationContext());
 
         progressDialog = new ProgressDialog(this);
         progressDialog.setCancelable(false);
@@ -288,61 +312,96 @@ public class RecommendationActivity extends AppCompatActivity {
         myAdapterHRating = new MyAdapterHRating(getApplicationContext(), shopArrayList2);
         ratingRecyclerview.setAdapter(myAdapterHRating);
 
-        db.collection("shop").limit(3).whereGreaterThanOrEqualTo("shop_rating", 4.5)
-                .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                    @Override
-                    public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+        gpsTracker = new GpsTracker(RecommendationActivity.this);
+        if(gpsTracker.canGetLocation()) {
+            db.collection("shop").whereGreaterThanOrEqualTo("shop_rating", 4.5)
+                    .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                        @Override
+                        public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
 
-                        if(error != null)
-                        {
-                            if(progressDialog.isShowing())
-                                progressDialog.dismiss();
+                            if (error != null) {
+                                if (progressDialog.isShowing())
+                                    progressDialog.dismiss();
 
-                            Log.e("Error with Firestore",error.getMessage());
-                            return;
-                        }
-
-                        for(DocumentChange dc : value.getDocumentChanges())
-                        {
-                            if(dc.getType() == DocumentChange.Type.ADDED)
-                            {
-                                Shop shop = dc.getDocument().toObject(Shop.class);
-                                shop.setShopID(dc.getDocument().getId());
-                                shopArrayList2.add(shop);
+                                Log.e("Error with Firestore", error.getMessage());
+                                return;
                             }
 
-                            myAdapterHRating.notifyDataSetChanged();
-                            if(progressDialog.isShowing())
-                                progressDialog.dismiss();
-                        }
-                    }
-                });
-/*
-        db.collection("shop")
-                .limit(3)
-                .whereGreaterThanOrEqualTo("shop_rating", 4.5)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                Log.d(TAG, document.getId() + " => " + document.getData());
+                            for (DocumentChange dc : value.getDocumentChanges()) {
+                                if (dc.getType() == DocumentChange.Type.ADDED) {
 
-                                String shopname = document.get("shop_name").toString();
-                                String shop_open = document.get("shop_open").toString();
-                                String shop_close = document.get("shop_close").toString();
-                                String shop_rating = document.get("shop_rating").toString();
+                                    double lat1 = Double.parseDouble(dc.getDocument().get("shop_latitude").toString());
+                                    double lon1 = Double.parseDouble(dc.getDocument().get("shop_longitude").toString());
 
-                                shopArrayList3.add(new Shop(shopname, shop_open, shop_close, shop_rating));
-                                myAdapter.notifyItemInserted(shopArrayList3.size());
+                                    double lat2 = gpsTracker.getLatitude();
+                                    double lon2 = gpsTracker.getLongitude();
 
+                                    // distance between latitudes and longitudes
+                                    double dLat = Math.toRadians(lat2 - lat1);
+                                    double dLon = Math.toRadians(lon2 - lon1);
+
+                                    // convert to radians
+                                    lat1 = Math.toRadians(lat1);
+                                    lat2 = Math.toRadians(lat2);
+
+                                    // apply formulae
+                                    double a = Math.pow(Math.sin(dLat / 2), 2) +
+                                            Math.pow(Math.sin(dLon / 2), 2) *
+                                                    Math.cos(lat1) *
+                                                    Math.cos(lat2);
+                                    double rad = 6371;
+                                    double c = 2 * Math.asin(Math.sqrt(a));
+                                    dist = (rad * c);
+                                    int n = 3;
+                                    dist = Math.round(dist * Math.pow(10, n))
+                                            / Math.pow(10, n);
+
+                                    //display products that owned by shop in 50km radius from user
+                                    if (dist <= 50 && shopArrayList2.size()<3) {
+                                        Shop shop = dc.getDocument().toObject(Shop.class);
+                                        shop.setShopID(dc.getDocument().getId());
+                                        shopArrayList2.add(shop);
+                                    }
+                                }
+
+                                myAdapterHRating.notifyDataSetChanged();
+                                if (progressDialog.isShowing())
+                                    progressDialog.dismiss();
                             }
-                        } else {
-                            Log.d(TAG, "Error getting documents: ", task.getException());
                         }
-                    }
-                });*/
+                    });
+        }
+        else{
+                db.collection("shop")
+                        .whereGreaterThanOrEqualTo("shop_rating", 4.5)
+                        .get()
+                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                final String TAG = "Read Data Activity";
+                                if (task.isSuccessful()) {
+                                    for (QueryDocumentSnapshot document : task.getResult()) {
+                                        Log.d(TAG, document.getId() + " => " + document.getData());
+
+                                        String shop_state = document.get("shop_state").toString();
+                                        String shopID = document.getId();
+                                        String shopname = document.get("shop_name").toString();
+                                        String shop_open = document.get("shop_open").toString();
+                                        String shop_close = document.get("shop_close").toString();
+                                        double shop_rating = Double.parseDouble(document.get("shop_rating").toString());
+
+
+                                        if(state2.equals(shop_state)&& shopArrayList2.size()<3) {
+                                            shopArrayList2.add(new Shop(shopID, shopname, shop_open, shop_close, shop_rating));
+                                            myAdapterHRating.notifyItemInserted(shopArrayList2.size());
+                                        }
+                                    }
+                                } else {
+                                    Log.d(TAG, "Error getting documents: ", task.getException());
+                                }
+                            }
+                        });
+        }
     }
 
     private void shopNearby() {
