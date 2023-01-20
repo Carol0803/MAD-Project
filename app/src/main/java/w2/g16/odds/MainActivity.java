@@ -328,6 +328,7 @@ public class MainActivity extends AppCompatActivity {
             String SKU = intent.getStringExtra("SKU");
             Intent intent2 = new Intent(getApplicationContext(), ViewProductActivity.class);
             intent2.putExtra("SKU", SKU);
+            intent2.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent2);
         }
     };
@@ -338,6 +339,7 @@ public class MainActivity extends AppCompatActivity {
             String categoryID = intent.getStringExtra("category_ID");
             Intent intent3 = new Intent(getApplicationContext(), ViewCategoryActivity.class);
             intent3.putExtra("category_ID", categoryID);
+            intent3.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent3);
         }
     };
