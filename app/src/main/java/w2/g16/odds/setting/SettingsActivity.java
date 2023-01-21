@@ -25,7 +25,7 @@ import w2.g16.odds.recommendation.RecommendationActivity;
 
 public class SettingsActivity extends AppCompatActivity {
 
-    TextView account,password,logout,userEmail;
+    TextView account,password,logout,help;
     BottomNavigationView btmNav;
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
@@ -94,6 +94,14 @@ public class SettingsActivity extends AppCompatActivity {
                 openSignout();
             }
         });
+
+        help = findViewById(R.id.help);
+        help.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openHelp();
+            }
+        });
     }
 
     public void openAccount(){
@@ -133,6 +141,11 @@ public class SettingsActivity extends AppCompatActivity {
         //Creating dialog box
         AlertDialog alert = builder.create();
         alert.show();
+    }
+
+    public void openHelp(){
+        Intent intent = new Intent(this, HelpActivity.class);
+        startActivity(intent);
     }
 
 }
