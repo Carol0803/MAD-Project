@@ -36,6 +36,12 @@ The application is complete with product browsing, the ordering process, and the
 | `postcode` | `number` |
 | `state` | `string` |
 
+<br>
+
+<p align="center" width="100%">
+  <img width="100%" src="https://raw.githubusercontent.com/Carol0803/MAD-Project/master/assets/Firebase%20Data%20Model.jpg"> 
+</p>
+
 ## Authors
 
 - Wong Kak Lok (B032010436) [@Carol0803](https://www.github.com/Carol0803)
