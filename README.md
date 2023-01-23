@@ -10,6 +10,32 @@ The user can place orders for products from these local shops through our mobile
 
 The application is complete with product browsing, the ordering process, and the payment gateway (PayPal) to make a payment.
 
+## Firebase Data Model
+
+#### Category
+
+| Parameter | Type     |
+| :-------- | :------- |
+| `_ID` | `ObjectID` |
+| `category_name` | `string` |
+| `icon_url` | `string` |
+| `product_quantity` | `number` |
+
+#### Customer
+
+| Parameter | Type     |
+| :-------- | :------- |
+| `_ID` | `ObjectID` |
+| `username` | `string` |
+| `email` | `string` |
+| `password` | `string` |
+| `tel` | `string` |
+| `addr1` | `string` |
+| `addr2` | `string` |
+| `city` | `string` |
+| `postcode` | `number` |
+| `state` | `string` |
+
 ## Authors
 
 - Wong Kak Lok (B032010436) [@Carol0803](https://www.github.com/Carol0803)
