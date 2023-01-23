@@ -12,35 +12,25 @@ The application is complete with product browsing, the ordering process, and the
 
 ## Firebase Data Model
 
-#### Category
-
-| Parameter | Type     |
-| :-------- | :------- |
-| `_ID` | `ObjectID` |
-| `category_name` | `string` |
-| `icon_url` | `string` |
-| `product_quantity` | `number` |
-
-#### Customer
-
-| Parameter | Type     |
-| :-------- | :------- |
-| `_ID` | `ObjectID` |
-| `username` | `string` |
-| `email` | `string` |
-| `password` | `string` |
-| `tel` | `string` |
-| `addr1` | `string` |
-| `addr2` | `string` |
-| `city` | `string` |
-| `postcode` | `number` |
-| `state` | `string` |
+This project employs **Firebase Firestore** as its primary data storage solution and utilizes 10 distinct JSON objects to structure and manage data within the database
 
 <br>
 
 <p align="center" width="100%">
   <img width="100%" src="https://raw.githubusercontent.com/Carol0803/MAD-Project/master/assets/Firebase%20Data%20Model.jpg"> 
 </p>
+
+## External API (Third-party API)
+
+This project used an external API, which is:
+
+1. PayPal Payment Gateway
+
+PayPal Payment Gateway is a widely used payment processing service that allows businesses and individuals to securely accept payments online. The PayPal Payment Gateway API allows developers to integrate PayPal's payment processing capabilities into their own applications. By using the PayPal API, developers can interact with PayPal's platform to handle payments, subscriptions, and other financial transactions within their apps.
+
+## Video Presentation
+
+[OODS - Demo](https://youtu.be/8bh238ekw3 "@embed")
 
 ## Authors
 
