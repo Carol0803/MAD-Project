@@ -4,8 +4,11 @@
 
 # On-Demand Delivery System 
 
-Put description here
+On-Demand Delivery System (OODS) is an application that provides delivery services for daily necessities. This benefits local businesses that have suffered as a result of the popularity of online shopping. Furthermore, people nowadays do not have time to shop for daily necessities.
 
+The user can place orders for products from these local shops through our mobile application. User can choose between home delivery and self-collection in the shop. 
+
+The application is complete with product browsing, the ordering process, and the payment gateway (PayPal) to make a payment.
 
 ## Authors
 
