@@ -1,3 +1,6 @@
+<p align="center" width="100%">
+  <img width="50%" src="https://raw.githubusercontent.com/Carol0803/MAD-Project/master/assets/ic_app_logo.png"> 
+</p>
 
 # On-Demand Delivery System 
 
